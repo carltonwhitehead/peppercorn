@@ -35,6 +35,7 @@ class File
         assert('is_integer($index)');
         assert('$index >= 0');
         assert('$index < $this->getLineCount()');
+        // TODO: confirm assert works with object scope in this way
         return $this->lines[$index];
     }
 
