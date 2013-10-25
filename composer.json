@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "zendframework/zendframework": "2.3.*@dev"
     },
     "autoload": {
         "psr-0": { "Peppercorn": "." }
