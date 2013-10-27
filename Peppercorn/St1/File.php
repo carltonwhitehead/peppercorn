@@ -46,7 +46,7 @@ class File
      */
     private static function buildAndSetLines($stringLines)
     {
-        foreach ($stringsLines as $stringLine) {
+        foreach ($stringLines as $stringLine) {
             $this->lines[] = new Line($this, $stringLine);
         }
     }
