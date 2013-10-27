@@ -14,10 +14,17 @@ class File
      */
     private $lines = array();
 
-    public function __construct($content)
+    /**
+     * An array of strings, each representing a category prefix
+     * @var array
+     */
+    private $categoryPrefixes;
+
+    public function __construct($content, $categoryPrefixes)
     {
         $stringLines = self::splitContentIntoStringLines($content);
         self::buildAndSetLines($stringLines);
+        $this->categoryPrefixes = $categoryPrefixes;
     }
 
     /**
@@ -62,5 +69,9 @@ class File
         Preconditions::checkArgumentIsKeyInArray($index, $this->lines);
 
         return $this->lines[$index];
+    }
+
+    public function getCategoryPrefixes() {
+        return $this->categoryPrefixes;
     }
 }

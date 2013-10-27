@@ -5,7 +5,8 @@ use Phava\Base\Strings;
 /**
  * A line from an st1 file
  *
- * @todo implement category lookups
+ * @TODO implement getCategoryByPrefix($prefix)
+ * @TODO implement parsed value cache
  */
 class Line
 {
@@ -22,25 +23,13 @@ class Line
      *
      * @var string
      */
-    private $line = '';
+    private $line;
 
-    /**
-     * query a state file line for value by key
-     *
-     * @return string
-     */
     public function __construct(File $file, $line)
     {
         $this->file = $file;
+        $this->line = $line;
     }
-
-    /**
-     * local static cache of category prefix strings
-     *
-     * @var array
-     * @todo refactor to allow retrieve from an St1-level config object, falling back to global if no St1-level config object exists
-     */
-    private static $categoryPrefixes = array();
 
     /**
      * retrieve a value from the line by its key
@@ -74,20 +63,16 @@ class Line
 
     public function getDriverCategory()
     {
-        $categoryService = new AxIr_Model_CategoryService();
-        if (! self::$categoryPrefixes) {
-            self::$categoryPrefixes = $categoryService->getCategoryPrefixes();
-        }
         $classString = strtoupper($this->parse('class'));
         $category = null;
-        foreach (self::$categoryPrefixes as $categoryPrefix) {
-            if ($categoryPrefix !== '' and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
-                $category = $categoryService->getCategoryByPrefix($categoryPrefix);
+        foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
+            if (Strings::isNotEmpty($categoryPrefix) and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
+                $category = $this->getCategoryByPrefix($categoryPrefix); // @TODO
                 break;
             }
         }
         if ($category === null) {
-            $category = $categoryService->getCategoryByPrefix('');
+            $category = $this->getCategoryByPrefix(''); // @TODO
         }
         return $category->prefix;
     }
@@ -178,10 +163,6 @@ class Line
 
     private function getCategoryPrefixes()
     {
-        if ($this->file->hasCategoryPrefixes()) {
-            return $this->file->getCategoryPrefixes();
-        } else {
-            return self::$categoryPrefixes;
-        }
+        return $this->file->getCategoryPrefixes();
     }
 }
