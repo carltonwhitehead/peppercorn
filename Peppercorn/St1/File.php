@@ -27,7 +27,7 @@ class File
         $lines = array();
         foreach ($rawLines as $rawLine) {
             $line = trim($rawLine);
-            if (strlen($line) > 0) { // omit empty lines
+            if (Strings::isNotEmpty($line)) {
                 $lines[] = $line;
             }
         }
