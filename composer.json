@@ -18,11 +18,18 @@
     ],
     "require": {
         "php":">=5.4.0",
-        "zendframework/zendframework":"2.3.*@dev"
+        "zendframework/zendframework":"2.3.*@dev",
+        "carltonwhitehead/phava":"dev-master"
     },
     "autoload":{
         "psr-0":{
             "Peppercorn":"."
         }
-    }
+    },
+    "repositories":[
+        {
+	        "type":"vcs",
+	        "url":"git@github.com:carltonwhitehead/phava.git"
+        }
+    ]
 }
