@@ -32,7 +32,6 @@ class Line
     public function __construct(File $file, $line)
     {
         $this->file = $file;
-        $this->line = trim($line);
     }
 
     /**
