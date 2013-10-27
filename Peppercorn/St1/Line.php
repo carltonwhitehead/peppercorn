@@ -1,10 +1,11 @@
 <?php
 namespace Peppercorn\St1;
 
+use Phava\Base\Strings;
 /**
  * A line from an st1 file
  *
- * @todo clean out/reimplement AxIr_* classes referenced here
+ * @todo implement category lookups
  */
 class Line
 {
@@ -95,12 +96,12 @@ class Line
     public function getDriverClass()
     {
         $classString = strtoupper($this->parse('class'));
-        if ($classString === '') {
-            $message = 'Invalid state file line is missing class.';
-            throw new AxIr_Parser_StateFileLine_Exception($message);
+        if (Strings::isEmpty($classString)) {
+            static $error = 'Invalid state file line is missing class.';
+            throw new LineException($error);
         }
         $categoryPrefix = $this->getDriverCategory();
-        if ($categoryPrefix != '') {
+        if (Strings::isNotEmpty($categoryPrefix)) {
             $classString = substr($classString, strlen($categoryPrefix));
         }
         return $classString;
@@ -109,9 +110,9 @@ class Line
     public function getDriverNumber()
     {
         $number = $this->parse('number');
-        if ($number === '') {
-            $message = 'Invalid state file line is missing driver number.';
-            throw new AxIr_Parser_StateFileLine_Exception($message);
+        if (Strings::isEmpty($number)) {
+            static $error = 'Invalid state file line is missing driver number.';
+            throw new LineException($error);
         }
         return $number;
     }
@@ -119,9 +120,9 @@ class Line
     public function getTimeRaw()
     {
         $timeRaw = $this->parse('tm');
-        if ($timeRaw === '') {
-            $message = 'Invalid state file line is missing raw time.';
-            throw new AxIr_Parser_StateFileLine_Exception($message);
+        if (Strings::isEmpty($timeRaw)) {
+            static $error = 'Invalid state file line is missing raw time.';
+            throw new LineException($error);
         }
         return $timeRaw;
     }
@@ -134,9 +135,9 @@ class Line
     public function getDriverName()
     {
         $driverName = $this->parse('driver');
-        if ($driverName === '') {
-            $message = 'Invalid state file line is missing driver name.';
-            throw new AxIr_Parser_StateFileLine_Exception($message);
+        if (Strings::isEmpty($driverName)) {
+            static $error = 'Invalid state file line is missing driver name.';
+            throw new LineException($error);
         }
         return $driverName;
     }
@@ -154,9 +155,9 @@ class Line
     public function getTimePax()
     {
         $timePax = strtoupper($this->parse('paxed'));
-        if ($timePax === '') {
-            $message = 'Invalid state file line is missing pax time.';
-            throw new AxIr_Parser_StateFileLine_Exception($message);
+        if (Strings::isEmpty($timePax)) {
+            static $error = 'Invalid state file line is missing pax time.';
+            throw new LineException($error);
         }
         return $timePax;
     }
