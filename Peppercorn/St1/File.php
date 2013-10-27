@@ -1,6 +1,10 @@
 <?php
 namespace Peppercorn\St1;
 
+use Phava\Base;
+use Phava\Base\Preconditions;
+use Phava\Base\Strings;
+
 class File
 {
 
@@ -12,6 +16,7 @@ class File
 
     public function __construct($content)
     {
+        Preconditions::checkArgument(Strings::isNotEmpty($content));
         $this->lines = self::splitContentIntoLines($content);
     }
 
@@ -32,10 +37,9 @@ class File
     }
 
     public function getLine($index) {
-        assert('is_integer($index)');
-        assert('$index >= 0');
-        assert('$index < $this->getLineCount()');
-        // TODO: confirm assert works with object scope in this way
+        Preconditions::checkArgumentIsInteger($index);
+        Preconditions::checkArgumentIsKeyInArray($index, $this->lines);
+
         return $this->lines[$index];
     }
 
