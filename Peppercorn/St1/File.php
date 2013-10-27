@@ -10,6 +10,7 @@ class File
 
     /**
      * Contains all lines from this file
+     *
      * @var array
      */
     private $lines;
@@ -20,7 +21,8 @@ class File
         $this->lines = self::splitContentIntoLines($content);
     }
 
-    private static function splitContentIntoLines($content) {
+    private static function splitContentIntoLines($content)
+    {
         $rawLines = explode("\n", $content);
         $lines = array();
         foreach ($rawLines as $rawLine) {
@@ -32,15 +34,16 @@ class File
         return $lines;
     }
 
-    public function getLineCount() {
+    public function getLineCount()
+    {
         return count($this->lines);
     }
 
-    public function getLine($index) {
+    public function getLine($index)
+    {
         Preconditions::checkArgumentIsInteger($index);
         Preconditions::checkArgumentIsKeyInArray($index, $this->lines);
 
         return $this->lines[$index];
     }
-
 }
