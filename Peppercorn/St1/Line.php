@@ -4,7 +4,6 @@ namespace Peppercorn\St1;
 /**
  * A line from an st1 file
  *
- * @todo remove underscore from private property/function names
  * @todo clean out/reimplement AxIr_* classes referenced here
  */
 class Line
@@ -22,7 +21,7 @@ class Line
      *
      * @var string
      */
-    private $_line = '';
+    private $line = '';
 
     /**
      * query a state file line for value by key
@@ -32,7 +31,7 @@ class Line
     public function __construct(File $file, $line)
     {
         $this->file = $file;
-        $this->_line = trim($line);
+        $this->line = trim($line);
     }
 
     /**
@@ -41,7 +40,7 @@ class Line
      * @var array
      * @todo refactor to allow retrieve from an St1-level config object, falling back to global if no St1-level config object exists
      */
-    private static $_categoryPrefixes = array();
+    private static $categoryPrefixes = array();
 
     /**
      * retrieve a value from the line by its key
@@ -49,18 +48,18 @@ class Line
      * @param string $key
      * @return string
      */
-    private function _parse($key)
+    private function parse($key)
     {
-        $keyStartPos = strpos($this->_line, $key);
+        $keyStartPos = strpos($this->line, $key);
         if ($keyStartPos !== false) {
             $keyLength = strlen($key);
             $valueStartPos = $keyStartPos + $keyLength + 1; // +1 to account for the trailing _
-            $valueStopPos = strpos($this->_line, '_', $valueStartPos);
+            $valueStopPos = strpos($this->line, '_', $valueStartPos);
             if ($valueStopPos !== false) {
                 $valueLength = $valueStopPos - $valueStartPos;
-                $value = substr($this->_line, $valueStartPos, $valueLength);
+                $value = substr($this->line, $valueStartPos, $valueLength);
             } else {
-                $value = substr($this->_line, $valueStartPos);
+                $value = substr($this->line, $valueStartPos);
             }
         } else {
             $value = '';
@@ -70,18 +69,18 @@ class Line
 
     public function getRunNumber()
     {
-        return $this->_parse('run');
+        return $this->parse('run');
     }
 
     public function getDriverCategory()
     {
         $categoryService = new AxIr_Model_CategoryService();
-        if (! self::$_categoryPrefixes) {
-            self::$_categoryPrefixes = $categoryService->getCategoryPrefixes();
+        if (! self::$categoryPrefixes) {
+            self::$categoryPrefixes = $categoryService->getCategoryPrefixes();
         }
-        $classString = strtoupper($this->_parse('class'));
+        $classString = strtoupper($this->parse('class'));
         $category = null;
-        foreach (self::$_categoryPrefixes as $categoryPrefix) {
+        foreach (self::$categoryPrefixes as $categoryPrefix) {
             if ($categoryPrefix !== '' and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
                 $category = $categoryService->getCategoryByPrefix($categoryPrefix);
                 break;
@@ -95,7 +94,7 @@ class Line
 
     public function getDriverClass()
     {
-        $classString = strtoupper($this->_parse('class'));
+        $classString = strtoupper($this->parse('class'));
         if ($classString === '') {
             $message = 'Invalid state file line is missing class.';
             throw new AxIr_Parser_StateFileLine_Exception($message);
@@ -109,7 +108,7 @@ class Line
 
     public function getDriverNumber()
     {
-        $number = $this->_parse('number');
+        $number = $this->parse('number');
         if ($number === '') {
             $message = 'Invalid state file line is missing driver number.';
             throw new AxIr_Parser_StateFileLine_Exception($message);
@@ -119,7 +118,7 @@ class Line
 
     public function getTimeRaw()
     {
-        $timeRaw = $this->_parse('tm');
+        $timeRaw = $this->parse('tm');
         if ($timeRaw === '') {
             $message = 'Invalid state file line is missing raw time.';
             throw new AxIr_Parser_StateFileLine_Exception($message);
@@ -129,12 +128,12 @@ class Line
 
     public function getPenalty()
     {
-        return strtoupper($this->_parse('penalty'));
+        return strtoupper($this->parse('penalty'));
     }
 
     public function getDriverName()
     {
-        $driverName = $this->_parse('driver');
+        $driverName = $this->parse('driver');
         if ($driverName === '') {
             $message = 'Invalid state file line is missing driver name.';
             throw new AxIr_Parser_StateFileLine_Exception($message);
@@ -144,17 +143,17 @@ class Line
 
     public function getCar()
     {
-        return $this->_parse('car');
+        return $this->parse('car');
     }
 
     public function getCarColor()
     {
-        return $this->_parse('cc');
+        return $this->parse('cc');
     }
 
     public function getTimePax()
     {
-        $timePax = strtoupper($this->_parse('paxed'));
+        $timePax = strtoupper($this->parse('paxed'));
         if ($timePax === '') {
             $message = 'Invalid state file line is missing pax time.';
             throw new AxIr_Parser_StateFileLine_Exception($message);
@@ -164,17 +163,17 @@ class Line
 
     public function getTimestamp()
     {
-        return (int) $this->_parse('tod');
+        return (int) $this->parse('tod');
     }
 
     public function getDiff()
     {
-        return $this->_parse('diff');
+        return $this->parse('diff');
     }
 
     public function getDiffFromFirst()
     {
-        return $this->_parse('diff1');
+        return $this->parse('diff1');
     }
 
     private function getCategoryPrefixes()
@@ -182,7 +181,7 @@ class Line
         if ($this->file->hasCategoryPrefixes()) {
             return $this->file->getCategoryPrefixes();
         } else {
-            return self::$_categoryPrefixes; // TODO: rename without underscore
+            return self::$categoryPrefixes;
         }
     }
 }
