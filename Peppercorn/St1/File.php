@@ -50,7 +50,7 @@ class File
         $stringLines = array();
         foreach ($rawLines as $rawLine) {
             $stringLine = trim($rawLine);
-            if (Strings::isNotEmpty($line)) {
+            if (Strings::isNotEmpty($stringLine)) {
                 $stringlines[] = $stringLine;
             }
         }
@@ -62,7 +62,7 @@ class File
      * @param array $stringLines
      * @return array
      */
-    private static function buildAndSetLines($content)
+    private function buildAndSetLines($content)
     {
         $stringLines = self::splitContentIntoStringLines($content);
         foreach ($stringLines as $stringLine) {
@@ -70,7 +70,7 @@ class File
         }
     }
 
-    private static function buildAndSetCategoryPrefixes($categories)
+    private function buildAndSetCategoryPrefixes($categories)
     {
     	foreach ($categories as $category) {
     	    /* @var $category Category */
@@ -78,7 +78,7 @@ class File
     	}
     }
 
-    private static function buildAndSetCategoriesByPrefix($categories)
+    private function buildAndSetCategoriesByPrefix($categories)
     {
         foreach($categories as $category) {
             /* @var $category Category */
