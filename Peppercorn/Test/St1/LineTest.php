@@ -13,7 +13,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $validContent
      *
-     * @dataProvider providerLineTestValidContent
+     * @dataProvider providerGetRunNumber
      */
     public function testGetRunNumber($validContent, $lineNumber, $expectedRunNumber)
     {
@@ -22,13 +22,36 @@ class LineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedRunNumber, $line->getRunNumber());
     }
 
-    public function providerLineTestValidContent()
+    public function providerGetRunNumber()
     {
         return array(
             array($this->getValidContent(), 0, 1),
             array($this->getValidContent(), 1, 2),
             array($this->getValidContent(), 8, 3),
             array($this->getValidContent(), 11, 6)
+        );
+    }
+
+    /**
+     * @param File $file
+     * @param int $lineNumber
+     * @param string $expectedCategoryPrefix
+     *
+     * @dataProvider providerGetCategory
+     */
+    public function testGetCategory(Line $line, $expectedCategoryPrefix)
+    {
+        $this->assertEquals($expectedCategoryPrefix, $line->getDriverCategory()->getPrefix());
+    }
+
+    public function providerGetCategory()
+    {
+        $file = new File($this->getValidContent(), array(new Category(''), new Category('TIR')));
+        return array(
+        	array($file->getLine(0), ''),
+            array($file->getLine(7), ''),
+            array($file->getLine(12), 'TIR'),
+            array($file->getLine(16), 'TIR')
         );
     }
 
