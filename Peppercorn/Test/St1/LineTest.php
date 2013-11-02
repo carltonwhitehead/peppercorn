@@ -174,6 +174,28 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedCarColor
+     *
+     * @dataProvider providerGetCarColor
+     */
+    public function testGetCarColor(Line $line, $expectedCarColor)
+    {
+        $actualCarColor = $line->getCarColor();
+        $this->assertEquals($expectedCarColor, $actualCarColor);
+    }
+
+    public function providerGetCarColor()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), 'Silver'),
+            array($file->getLine(6), 'Red'),
+            array($file->getLine(12), '')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
