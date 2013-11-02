@@ -41,18 +41,28 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCategory(Line $line, $expectedCategoryPrefix)
     {
-        $this->assertEquals($expectedCategoryPrefix, $line->getDriverCategory()->getPrefix());
+        /* @var $driverCategory Category */
+        $driverCategory = $line->getDriverCategory();
+        $this->assertNotNull($driverCategory);
+        $this->assertInstanceOf(get_class(new Category('')), $driverCategory);
+        $actualCategoryPrefix = $driverCategory->getPrefix();
+        $this->assertEquals($expectedCategoryPrefix, $actualCategoryPrefix);
     }
 
     public function providerGetCategory()
     {
-        $file = new File($this->getValidContent(), array(new Category(''), new Category('TIR')));
+        $file = $this->getValidFile();
         return array(
         	array($file->getLine(0), ''),
             array($file->getLine(7), ''),
             array($file->getLine(12), 'TIR'),
             array($file->getLine(16), 'TIR')
         );
+    }
+
+    private function getValidFile()
+    {
+        return new File($this->getValidContent(), array(new Category(''), new Category('TIR')));
     }
 
     private function getValidContent()
