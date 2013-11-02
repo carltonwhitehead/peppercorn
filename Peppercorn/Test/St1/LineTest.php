@@ -359,6 +359,27 @@ class LineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param Line $line
+     *
+     * @dataProvider providerGetDriverClassWithBadContent
+     */
+    public function testGetDriverClassWithBadContent(Line $line)
+    {
+        $this->setExpectedException(get_class(new LineException()));
+        $line->getDriverClass();
+    }
+
+    public function providerGetDriverClassWithBadContent()
+    {
+        $file = $this->getBadFile();
+        return array(
+            array($file->getLine(4)),
+            array($file->getLine(5)),
+            array($file->getLine(6))
+        );
+    }
+
     private function getValidFile()
     {
         return new File($this->getValidContent(), $this->getMockCategories());
