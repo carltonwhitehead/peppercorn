@@ -129,6 +129,28 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedCar
+     *
+     * @dataProvider providerGetCar
+     */
+    public function testGetCar(Line $line, $expectedCar)
+    {
+        $actualCar = $line->getCar();
+        $this->assertEquals($expectedCar, $actualCar);
+    }
+
+    public function providerGetCar()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), '2002 Honda S2000'),
+            array($file->getLine(6), 'Altima'),
+            array($file->getLine(18), '2002 Honda S2000')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
