@@ -107,6 +107,29 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedPenalty
+     *
+     * @dataProvider providerGetPenalty
+     */
+    public function testGetPenalty(Line $line, $expectedPenalty)
+    {
+        $actualPenalty = $line->getPenalty();
+        $this->assertEquals($expectedPenalty, $actualPenalty);
+    }
+
+    public function providerGetPenalty()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), '1'),
+            array($file->getLine(1), ''),
+            array($file->getLine(8), 'DNF'),
+            array($file->getLine(16), 'RRN')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverName
      *
      * @dataProvider providerGetDriverName
