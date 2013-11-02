@@ -28,14 +28,14 @@ class File
 
     public function __construct($content, $categories)
     {
-        Preconditions::checkArgument($categories !== null);
+        Preconditions::checkArgumentIsString($content);
         Preconditions::checkArgument(is_array($categories));
         Preconditions::checkArgument(count($categories) > 0);
 
-        self::buildAndSetLines($content);
+        $this->buildAndSetLines($content);
 
-        self::buildAndSetCategoryPrefixes($categories);
-        self::buildAndSetCategoriesByPrefix($categories);
+        $this->buildAndSetCategoryPrefixes($categories);
+        $this->buildAndSetCategoriesByPrefix($categories);
     }
 
     /**
@@ -51,7 +51,7 @@ class File
         foreach ($rawLines as $rawLine) {
             $stringLine = trim($rawLine);
             if (Strings::isNotEmpty($stringLine)) {
-                $stringlines[] = $stringLine;
+                $stringLines[] = $stringLine;
             }
         }
         return $stringLines;
