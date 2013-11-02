@@ -91,6 +91,10 @@ class File
         return count($this->lines);
     }
 
+    /**
+     * @param int $index
+     * @return Line
+     */
     public function getLine($index)
     {
         Preconditions::checkArgumentIsInteger($index);

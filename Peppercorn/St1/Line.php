@@ -2,6 +2,7 @@
 namespace Peppercorn\St1;
 
 use Phava\Base\Strings;
+use Phava\Base\Preconditions;
 /**
  * A line from an st1 file
  *
@@ -26,6 +27,7 @@ class Line
 
     public function __construct(File $file, $line)
     {
+        Preconditions::checkArgument($file != null);
         $this->file = $file;
         $this->line = $line;
     }
