@@ -2,6 +2,7 @@
 namespace Peppercorn\Test\St1;
 
 use Peppercorn\St1\Line;
+use Peppercorn\St1\LineException;
 use Peppercorn\St1\File;
 use Peppercorn\St1\Category;
 
@@ -107,6 +108,26 @@ class LineTest extends \PHPUnit_Framework_TestCase
             array($file->getLine(6), '43.071'),
             array($file->getLine(8), '42.432'),
             array($file->getLine(16), '67.648')
+        );
+    }
+
+    /**
+     * @param Line $line
+     *
+     * @dataProvider providerGetTimeRawWithBadContent
+     */
+    public function testGetTimeRawWithBadContent(Line $line)
+    {
+        $this->setExpectedException(get_class(new LineException()));
+        $line->getTimeRaw();
+    }
+
+    public function providerGetTimeRawWithBadContent()
+    {
+        $file = $this->getBadFile();
+        return array(
+            array($file->getLine(0)),
+            array($file->getLine(1))
         );
     }
 
@@ -320,12 +341,27 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     private function getValidFile()
     {
-        return new File($this->getValidContent(), array(new Category(''), new Category('TIR')));
+        return new File($this->getValidContent(), $this->getMockCategories());
+    }
+
+    private function getBadFile()
+    {
+        return new File($this->getBadContent(), $this->getMockCategories());
+    }
+
+    private function getMockCategories()
+    {
+        return array(new Category(''), new Category('TIR'));
     }
 
     private function getValidContent()
     {
         return $this->loadAsset('ValidContent.st1');
+    }
+
+    private function getBadContent()
+    {
+        return $this->loadAsset('BadContent.st1');
     }
 
     private function loadAsset($name)
