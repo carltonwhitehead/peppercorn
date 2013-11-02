@@ -84,6 +84,29 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedTimeRaw
+     *
+     * @dataProvider providerGetTimeRaw
+     */
+    public function testGetTimeRaw(Line $line, $expectedTimeRaw)
+    {
+        $actualTimeRaw = $line->getTimeRaw();
+        $this->assertEquals($expectedTimeRaw, $actualTimeRaw);
+    }
+
+    public function providerGetTimeRaw()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), '52.444'),
+            array($file->getLine(6), '43.071'),
+            array($file->getLine(8), '42.432'),
+            array($file->getLine(16), '67.648')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
