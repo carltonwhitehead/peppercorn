@@ -5,7 +5,6 @@ use Phava\Base\Strings;
 /**
  * A line from an st1 file
  *
- * @TODO implement getCategoryByPrefix($prefix)
  * @TODO implement parsed value cache
  */
 class Line
@@ -61,20 +60,25 @@ class Line
         return $this->parse('run');
     }
 
+    /**
+     * get the driver's Category
+     * @return \Peppercorn\St1\Category
+     */
     public function getDriverCategory()
     {
         $classString = strtoupper($this->parse('class'));
+        /* @var $category Category */
         $category = null;
         foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
             if (Strings::isNotEmpty($categoryPrefix) and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
-                $category = $this->getCategoryByPrefix($categoryPrefix); // @TODO
+                $category = $this->getCategoryByPrefix($categoryPrefix);
                 break;
             }
         }
         if ($category === null) {
-            $category = $this->getCategoryByPrefix(''); // @TODO
+            $category = $this->getCategoryByPrefix('');
         }
-        return $category->prefix;
+        return $category;
     }
 
     public function getDriverClass()
@@ -84,7 +88,7 @@ class Line
             static $error = 'Invalid state file line is missing class.';
             throw new LineException($error);
         }
-        $categoryPrefix = $this->getDriverCategory();
+        $categoryPrefix = $this->getDriverCategory()->getPrefix();
         if (Strings::isNotEmpty($categoryPrefix)) {
             $classString = substr($classString, strlen($categoryPrefix));
         }
@@ -161,8 +165,22 @@ class Line
         return $this->parse('diff1');
     }
 
+    /**
+     * Convenience to get the array of category prefixes from the file
+     * @return array:
+     */
     private function getCategoryPrefixes()
     {
         return $this->file->getCategoryPrefixes();
+    }
+
+    /**
+     * Convenience to get a Category from the file by prefix
+     * @param string $prefix
+     * @return Category
+     */
+    private function getCategoryByPrefix($prefix)
+    {
+        return $this->file->getCategoryByPrefix($prefix);
     }
 }

@@ -15,16 +15,27 @@ class File
     private $lines = array();
 
     /**
-     * An array of strings, each representing a category prefix
+     * An array of category prefix strings
      * @var array
      */
-    private $categoryPrefixes;
+    private $categoryPrefixes = array();
 
-    public function __construct($content, $categoryPrefixes)
+    /**
+     * An array of Category objects keyed by the Category's prefix
+     * @var array
+     */
+    private $categoriesByPrefix = array();
+
+    public function __construct($content, $categories)
     {
-        $stringLines = self::splitContentIntoStringLines($content);
-        self::buildAndSetLines($stringLines);
-        $this->categoryPrefixes = $categoryPrefixes;
+        Preconditions::checkArgument($categories !== null);
+        Preconditions::checkArgument(is_array($categories));
+        Preconditions::checkArgument(count($categories) > 0);
+
+        self::buildAndSetLines($content);
+
+        self::buildAndSetCategoryPrefixes($categories);
+        self::buildAndSetCategoriesByPrefix($categories);
     }
 
     /**
@@ -51,10 +62,27 @@ class File
      * @param array $stringLines
      * @return array
      */
-    private static function buildAndSetLines($stringLines)
+    private static function buildAndSetLines($content)
     {
+        $stringLines = self::splitContentIntoStringLines($content);
         foreach ($stringLines as $stringLine) {
             $this->lines[] = new Line($this, $stringLine);
+        }
+    }
+
+    private static function buildAndSetCategoryPrefixes($categories)
+    {
+    	foreach ($categories as $category) {
+    	    /* @var $category Category */
+    	    $this->categoryPrefixes[] = $category->getPrefix();
+    	}
+    }
+
+    private static function buildAndSetCategoriesByPrefix($categories)
+    {
+        foreach($categories as $category) {
+            /* @var $category Category */
+            $this->categoriesByPrefix[$category->getPrefix()] = $category;
         }
     }
 
@@ -73,5 +101,9 @@ class File
 
     public function getCategoryPrefixes() {
         return $this->categoryPrefixes;
+    }
+
+    public function getCategoryByPrefix($prefix) {
+        return $this->categoriesByPrefix[$prefix];
     }
 }
