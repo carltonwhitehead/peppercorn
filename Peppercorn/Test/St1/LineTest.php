@@ -107,6 +107,28 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedDriverName
+     *
+     * @dataProvider providerGetDriverName
+     */
+    public function testGetDriverName(Line $line, $expectedDriverName)
+    {
+        $actualDriverName = $line->getDriverName();
+        $this->assertEquals($expectedDriverName, $actualDriverName);
+    }
+
+    public function providerGetDriverName()
+    {
+        $file = $this->getValidFile();
+        $name = 'Carlton Whitehead';
+        return array(
+            array($file->getLine(0), $name),
+            array($file->getLine(18), $name)
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
