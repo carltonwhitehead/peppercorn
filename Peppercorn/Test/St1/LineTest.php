@@ -228,6 +228,28 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param int $expectedTimestamp
+     *
+     * @dataProvider providerGetTimestamp
+     */
+    public function testGetTimestamp(Line $line, $expectedTimestamp)
+    {
+        $actualTimestamp = $line->getTimestamp();
+        $this->assertInternalType('int', $actualTimestamp);
+        $this->assertEquals($expectedTimestamp, $actualTimestamp);
+    }
+
+    public function providerGetTimestamp()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), 1361128824),
+            array($file->getLine(18), 1354479006)
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
