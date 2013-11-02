@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="./vendor/autoload.php">
+	<filter>
+		<blacklist>
+			<directory>./vendor/</directory>
+			<directory>./Peppercorn/Test/</directory>
+		</blacklist>
+	</filter>
+	<testsuites>
+		<testsuite name="Peppercorn Test Suite">
+			<directory>./Peppercorn/Test/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
