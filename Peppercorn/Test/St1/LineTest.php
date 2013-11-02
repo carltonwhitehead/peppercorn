@@ -60,6 +60,30 @@ class LineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param Line $line
+     * @param string $expectedDriverClass
+     *
+     * @dataProvider providerGetDriverClass
+     */
+    public function testGetDriverClass(Line $line, $expectedDriverClass)
+    {
+        $driverClass = $line->getDriverClass();
+        $this->assertNotNull($driverClass);
+        $this->assertEquals($expectedDriverClass, $line->getDriverClass());
+    }
+
+    public function providerGetDriverClass()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), 'STR'),
+            array($file->getLine(5), 'STR'),
+            array($file->getLine(8), 'STC'),
+            array($file->getLine(16), 'BS')
+        );
+    }
+
     private function getValidFile()
     {
         return new File($this->getValidContent(), array(new Category(''), new Category('TIR')));
