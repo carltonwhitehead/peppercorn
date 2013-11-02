@@ -86,13 +86,13 @@ class Line
     public function getDriverClass()
     {
         $classString = strtoupper($this->parse('class'));
-        if (Strings::isEmpty($classString)) {
-            static $error = 'Invalid state file line is missing class.';
-            throw new LineException($error);
-        }
         $categoryPrefix = $this->getDriverCategory()->getPrefix();
         if (Strings::isNotEmpty($categoryPrefix)) {
             $classString = substr($classString, strlen($categoryPrefix));
+        }
+        if (Strings::isEmpty($classString)) {
+            static $error = 'Invalid state file line is missing class.';
+            throw new LineException($error);
         }
         return $classString;
     }
