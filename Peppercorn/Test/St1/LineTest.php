@@ -89,6 +89,26 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     *
+     * @dataProvider providerGetDriverNumberWithBadContent
+     */
+    public function testGetDriverNumberWithBadContent(Line $line)
+    {
+        $this->setExpectedException(get_class(new LineException()));
+        $line->getDriverNumber();
+    }
+
+    public function providerGetDriverNumberWithBadContent()
+    {
+        $file = $this->getBadFile();
+        return array(
+            array($file->getLine(7)),
+            array($file->getLine(8))
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedTimeRaw
      *
      * @dataProvider providerGetTimeRaw
