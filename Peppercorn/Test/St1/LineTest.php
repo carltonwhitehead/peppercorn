@@ -196,6 +196,29 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedTimePax
+     *
+     * @dataProvider providerGetTimePax
+     */
+    public function testGetTimePax(Line $line, $expectedTimePax)
+    {
+        $actualTimePax = $line->getTimePax();
+        $this->assertInternalType('string', $actualTimePax);
+        $this->assertEquals($expectedTimePax, $actualTimePax);
+    }
+
+    public function providerGetTimePax()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), '45.678'),
+            array($file->getLine(8), 'DNF'),
+            array($file->getLine(16), '57.027')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
