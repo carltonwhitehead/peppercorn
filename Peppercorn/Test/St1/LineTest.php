@@ -180,6 +180,26 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     *
+     * @dataProvider providerGetDriverNameWithBadContent
+     */
+    public function testGetDriverNameWithBadContent(Line $line)
+    {
+        $this->setExpectedException(get_class(new LineException()));
+        $line->getDriverName();
+    }
+
+    public function providerGetDriverNameWithBadContent()
+    {
+        $file = $this->getBadFile();
+        return array(
+            array($file->getLine(2)),
+            array($file->getLine(3))
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedCar
      *
      * @dataProvider providerGetCar
