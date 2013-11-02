@@ -273,6 +273,29 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param string $expectedDiffFromFirst
+     *
+     * @dataProvider providerGetDiffFromFirst
+     */
+    public function testGetDiffFromFirst(Line $line, $expectedDiffFromFirst)
+    {
+        $actualDiffFromFirst = $line->getDiffFromFirst();
+        $this->assertInternalType('string', $actualDiffFromFirst);
+        $this->assertEquals($expectedDiffFromFirst, $actualDiffFromFirst);
+    }
+
+    public function providerGetDiffFromFirst()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), '+4.620'),
+            array($file->getLine(5), '+0.880'),
+            array($file->getLine(6), '-')
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param string $expectedDriverClass
      *
      * @dataProvider providerGetDriverClass
