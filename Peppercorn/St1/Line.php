@@ -107,6 +107,11 @@ class Line
         return $number;
     }
 
+    /**
+     * Get the RAW time of the run.
+     * @throws LineException if the line is missing a raw time
+     * @return string
+     */
     public function getTimeRaw()
     {
         $timeRaw = $this->parse('tm');
