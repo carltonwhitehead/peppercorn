@@ -289,6 +289,26 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     *
+     * @dataProvider providerGetTimePaxWithBadContent
+     */
+    public function testGetTimePaxWithBadContent(Line $line)
+    {
+        $this->setExpectedException(get_class(new LineException()));
+        $line->getTimePax();
+    }
+
+    public function providerGetTimePaxWithBadContent()
+    {
+        $file = $this->getBadFile();
+        return array(
+            array($file->getLine(9)),
+            array($file->getLine(10))
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param int $expectedTimestamp
      *
      * @dataProvider providerGetTimestamp
