@@ -19,7 +19,9 @@ class LineTest extends \PHPUnit_Framework_TestCase
     {
         $file = new File($validContent, array(new Category('')));
         $line = $file->getLine($lineNumber);
-        $this->assertEquals($expectedRunNumber, $line->getRunNumber());
+        $actualRunNumber = $line->getRunNumber();
+        $this->assertInternalType('string', $actualRunNumber);
+        $this->assertEquals($expectedRunNumber, $actualRunNumber);
     }
 
     public function providerGetRunNumber()
@@ -46,6 +48,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($driverCategory);
         $this->assertInstanceOf(get_class(new Category('')), $driverCategory);
         $actualCategoryPrefix = $driverCategory->getPrefix();
+        $this->assertInternalType('string', $actualCategoryPrefix);
         $this->assertEquals($expectedCategoryPrefix, $actualCategoryPrefix);
     }
 
@@ -69,6 +72,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetDriverNumber(Line $line, $expectedDriverNumber)
     {
         $actualDriverNumber = $line->getDriverNumber();
+        $this->assertInternalType('string', $actualDriverNumber);
         $this->assertEquals($expectedDriverNumber, $actualDriverNumber);
     }
 
@@ -91,6 +95,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetTimeRaw(Line $line, $expectedTimeRaw)
     {
         $actualTimeRaw = $line->getTimeRaw();
+        $this->assertInternalType('string', $actualTimeRaw);
         $this->assertEquals($expectedTimeRaw, $actualTimeRaw);
     }
 
@@ -114,6 +119,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetPenalty(Line $line, $expectedPenalty)
     {
         $actualPenalty = $line->getPenalty();
+        $this->assertInternalType('string', $actualPenalty);
         $this->assertEquals($expectedPenalty, $actualPenalty);
     }
 
@@ -137,6 +143,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetDriverName(Line $line, $expectedDriverName)
     {
         $actualDriverName = $line->getDriverName();
+        $this->assertInternalType('string', $actualDriverName);
         $this->assertEquals($expectedDriverName, $actualDriverName);
     }
 
@@ -159,6 +166,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetCar(Line $line, $expectedCar)
     {
         $actualCar = $line->getCar();
+        $this->assertInternalType('string', $actualCar);
         $this->assertEquals($expectedCar, $actualCar);
     }
 
@@ -181,6 +189,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetCarColor(Line $line, $expectedCarColor)
     {
         $actualCarColor = $line->getCarColor();
+        $this->assertInternalType('string', $actualCarColor);
         $this->assertEquals($expectedCarColor, $actualCarColor);
     }
 
@@ -225,9 +234,9 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDriverClass(Line $line, $expectedDriverClass)
     {
-        $driverClass = $line->getDriverClass();
-        $this->assertNotNull($driverClass);
-        $this->assertEquals($expectedDriverClass, $line->getDriverClass());
+        $actualDriverClass = $line->getDriverClass();
+        $this->assertInternalType('string', $actualDriverClass);
+        $this->assertEquals($expectedDriverClass, $actualDriverClass);
     }
 
     public function providerGetDriverClass()
