@@ -1,10 +1,10 @@
 # Peppercorn
 
-A sweet library for querying sour st1 files
+A sweet library for parsing and querying sour st1 files
 
 ## Status
 
-Peppercorn is under development. File and Line classes with nearly 100% unit test code coverage are merged into master. You can use these to read a .st1 file and get the individual values of each line on a line-by-line basis.
+Peppercorn is under development. File and Line classes with nearly 100% unit test code coverage are merged into master. You can use these classes to read a .st1 file and get the individual values of each line on a line-by-line basis.
 
 ## Roadmap
 
