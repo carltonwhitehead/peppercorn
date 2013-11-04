@@ -33,7 +33,7 @@ class WhereDriverIs extends Where
         $this->driverNumber = $driverNumber;
     }
 
-    public function test($line)
+    public function test(Line $line)
     {
         return
             $line->getDriverNumber() === $this->driverNumber

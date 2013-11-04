@@ -23,13 +23,13 @@ class Query
 
     /**
      * Controls the direction of Line evaluation against the where tests
-     * @var unknown
+     * @var string
      */
-    private $testWheresDirection = self::TEST_WHERES_ASCENDING;
+    private $testLinesDirection;
 
     public function __construct(File $file)
     {
-        $this->file;
+        $this->file = $file;
     }
 
     /**
@@ -48,9 +48,9 @@ class Query
      *
      * @return \Peppercorn\St1\Query
      */
-    public function setTestWheresAscending()
+    public function setTestLinesAscending()
     {
-        $this->testWheresDirection = self::$TEST_WHERES_ASCENDING;
+        $this->testLinesDirection = self::$TEST_WHERES_ASCENDING;
         return $this;
     }
 
@@ -60,9 +60,9 @@ class Query
      *
      * @return \Peppercorn\St1\Query
      */
-    public function setTestWheresDescending()
+    public function setTestLinesDescending()
     {
-        $this->testWheresDirection = self::$TEST_WHERES_DESCENDING;
+        $this->testLinesDirection = self::$TEST_WHERES_DESCENDING;
         return $this;
     }
 
@@ -71,13 +71,13 @@ class Query
      */
     public function execute()
     {
-        switch ($this->testWheresDirection) {
+        switch ($this->testLinesDirection) {
         	case self::$TEST_WHERES_DESCENDING:
-        	    $result = $this->testWheresDescending();
+        	    $result = $this->testLinesDescending();
         	    break;
         	case self::$TEST_WHERES_ASCENDING:
         	default:
-        	    $result = $this->testWheresAscending();
+        	    $result = $this->testLinesAscending();
         	    break;
         }
         return $result;
@@ -87,7 +87,7 @@ class Query
      * Test each line in ascending order
      * @return array only Line objects which passed all Where tests
      */
-    private function testWheresAscending()
+    private function testLinesAscending()
     {
         $result = array();
         for ($i = 0; $i < $this->file->getLineCount(); $i++) {
@@ -104,7 +104,7 @@ class Query
      * Test each line in descending order
      * @return array only Line objects which passed all Where tests
      */
-    private function testWheresDescending()
+    private function testLinesDescending()
     {
         $result = array();
         for ($i = $this->file->getLineCount() - 1; $i >= 0; $i--) {
@@ -112,8 +112,9 @@ class Query
             if (!$this->testLine($line)) {
                 continue;
             }
-            $result = $line;
+            $result[] = $line;
         }
+        return $result;
     }
 
     /**
