@@ -152,12 +152,13 @@ class Line
      */
     public function getTimeRawWithPenalty()
     {
-        $time = (float) $this->getTimeRaw();
+        $time = $this->getTimeRaw();
         if ($this->hasConePenalty()) {
             $time += ((float) $this->getPenalty() * (float) $this->getSecondsPerCone());
-            $time = (string) round($time, 3);
+            $time = round($time, 3);
+            $time = number_format($time, 3);
         }
-        return $time;
+        return (string) $time;
     }
 
     /**

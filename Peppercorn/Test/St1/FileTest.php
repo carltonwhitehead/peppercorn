@@ -160,4 +160,16 @@ class FileTest extends \PHPUnit_Framework_TestCase
         return array('', 'NOV', 'LAD', 'X');
     }
 
+    /**
+     * @dataProvider providerValidContent
+     */
+    public function testGetPenalty($content)
+    {
+        $defaultPenaltyFile = new File($content, array(new Category('')));
+        $this->assertEquals(2, $defaultPenaltyFile->getSecondsPerCone());
+        $randomPenalty = rand(1, 5);
+        $randomPenaltyFile = new File($content, array(new Category('')), $randomPenalty);
+        $this->assertEquals($randomPenalty, $randomPenaltyFile->getSecondsPerCone());
+    }
+
 }

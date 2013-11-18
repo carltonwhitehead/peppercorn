@@ -420,6 +420,103 @@ class LineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param Line $line
+     * @param string $expected
+     *
+     * @dataProvider providerGetTimeRawWithPenalty
+     */
+    public function testGetTimeRawWithPenalty(Line $line, $expected)
+    {
+        $actualTimeRawWithPenalty = $line->getTimeRawWithPenalty();
+        $this->assertInternalType('string', $actualTimeRawWithPenalty);
+        $this->assertTrue($actualTimeRawWithPenalty === $expected);
+    }
+
+    public function providerGetTimeRawWithPenalty()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), '54.444'), // has +1
+            array($file->getLine(1), '51.490'), // no penalty, time with trailing zeros
+            array($file->getLine(8), '42.432'), // has DNF
+            array($file->getLine(16), '67.648'), // has RRN
+            array($file->getLine(19), '52.700') // has +1, time with trailing zeros
+        );
+    }
+
+    /**
+     * @param Line $Line
+     * @param boolean $expected
+     *
+     * @dataProvider providerHasPenalty
+     */
+    public function testHasPenalty(Line $line, $expected)
+    {
+        $actualHasPenalty = $line->hasPenalty();
+        $this->assertInternalType('boolean', $actualHasPenalty);
+        $this->assertEquals($expected, $actualHasPenalty);
+    }
+
+    public function providerHasPenalty()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), true), // +1
+            array($file->getLine(1), false), // no penalty
+            array($file->getLine(8), true), // DNF
+            array($file->getLine(16), true) // RRN
+        );
+    }
+
+    /**
+     * @param Line $line
+     * @param boolean $expected
+     *
+     * @dataProvider providerIsDnf
+     */
+    public function testIsDnf(Line $line, $expected)
+    {
+        $actualIsDnf = $line->isDnf();
+        $this->assertInternalType('boolean', $actualIsDnf);
+        $this->assertEquals($expected, $actualIsDnf);
+    }
+
+    public function providerIsDnf()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), false), // +1
+        	array($file->getLine(1), false), // clean
+        	array($file->getLine(8), true), // DNF
+        	array($file->getLine(16), false) // RRN
+        );
+    }
+
+    /**
+     * @param Line $line
+     * @param boolean $expected
+     *
+     * @dataProvider providerIsRerun
+     */
+    public function testIsRerun(Line $line, $expected)
+    {
+        $actual = $line->isRerun();
+        $this->assertInternalType('boolean', $actual);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providerIsRerun()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), false), // +1
+        	array($file->getLine(1), false), // clean
+        	array($file->getLine(8), false), // DNF
+        	array($file->getLine(16), true), // RRN
+        );
+    }
+
     private function getValidFile()
     {
         return new File($this->getValidContent(), $this->getMockCategories());
