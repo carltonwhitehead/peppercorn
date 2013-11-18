@@ -49,7 +49,7 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
     {
         return array(
         	array(new Category(''), new Category(''), true),
-            array(new Category('RT', new Category('')), false),
+            array(new Category('RT'), new Category(''), false),
             array(new Category(''), new Category('RT'), false)
         );
     }
