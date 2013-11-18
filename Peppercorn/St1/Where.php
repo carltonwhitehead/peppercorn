@@ -1,7 +1,7 @@
 <?php
 namespace Peppercorn\St1;
 
-abstract class Where
+interface Where
 {
 
     /**
@@ -10,5 +10,5 @@ abstract class Where
      * @param Line $line
      * @return true if the Line passes, false if it fails
      */
-    abstract public function test(Line $line);
+    public function test(Line $line);
 }

@@ -6,7 +6,7 @@ use Phava\Base\Preconditions;
 /**
  * Test whether the line has the driver's category, class, and number
  */
-class WhereDriverIs extends Where
+class WhereDriverIs implements Where
 {
 
     /**
