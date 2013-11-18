@@ -32,4 +32,25 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
             array(new \stdClass())
         );
     }
+
+    /**
+     * @param Category $one
+     * @param Category $other
+     * @param boolean $expectedValue
+     *
+     * @dataProvider providerEquals
+     */
+    public function testEquals(Category $one, Category $other, $expectedValue)
+    {
+        $this->assertEquals($expectedValue, $one->equals($other));
+    }
+
+    public function providerEquals()
+    {
+        return array(
+        	array(new Category(''), new Category(''), true),
+            array(new Category('RT', new Category('')), false),
+            array(new Category(''), new Category('RT'), false)
+        );
+    }
 }

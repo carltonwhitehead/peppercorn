@@ -28,4 +28,9 @@ class Category
     {
         return $this->prefix;
     }
+
+    public function equals(Category $other)
+    {
+        return $this->prefix === $other->prefix;
+    }
 }
