@@ -26,11 +26,18 @@ class File
      */
     private $categoriesByPrefix = array();
 
-    public function __construct($content, $categories)
+    /**
+     * The number of seconds per cone penalty
+     * @var number
+     */
+    private $secondsPerCone;
+
+    public function __construct($content, $categories, $secondsPerCone = 2)
     {
         Preconditions::checkArgumentIsString($content);
         Preconditions::checkArgument(is_array($categories));
         Preconditions::checkArgument(count($categories) > 0);
+        Preconditions::checkArgumentIsInteger($secondsPerCone);
 
         $this->buildAndSetLines($content);
 
@@ -109,5 +116,10 @@ class File
 
     public function getCategoryByPrefix($prefix) {
         return $this->categoriesByPrefix[$prefix];
+    }
+
+    public function getSecondsPerCone()
+    {
+        return $this->secondsPerCone;
     }
 }

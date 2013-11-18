@@ -130,6 +130,9 @@ class Line
 
     /**
      * Get the RAW time of the run.
+     * AXware has NOT factored in cone penalty seconds, if any.
+     * Be sure to call this method only if you don't need penalty seconds included.
+     *
      * @throws LineException if the line is missing a raw time
      * @return string
      */
@@ -141,6 +144,56 @@ class Line
             throw new LineException($error);
         }
         return $timeRaw;
+    }
+
+    /**
+     * Gets the raw time of the run with cone penalty seconds applied, if any.
+     * @return string
+     */
+    public function getTimeRawWithPenalty()
+    {
+        $time = (float) $this->getTimeRaw();
+        if ($this->hasConePenalty()) {
+            $time += ((float) $this->getPenalty() * (float) $this->getSecondsPerCone());
+            $time = (string) round($time, 3);
+        }
+        return $time;
+    }
+
+    /**
+     * Find whether this run has any penalty
+     * @return boolean true if the run has a penalty, false if it does not
+     */
+    public function hasPenalty()
+    {
+        return strlen($this->getPenalty()) > 0;
+    }
+
+    /**
+     * Find whether this run has a cone penalty
+     * @return booean true if the run has a cone penalty, false if it does not (but may not necessarily be clean)
+     */
+    public function hasConePenalty()
+    {
+        return (int) $this->getPenalty() > 0;
+    }
+
+    /**
+     * Find whether this run is a DNF
+     * @return boolean true if the run is a DNF, false if it is not
+     */
+    public function isDnf()
+    {
+        return $this->getPenalty() === 'DNF';
+    }
+
+    /**
+     * Find whether this run received a rerun call
+     * @return boolean boolean true if the run is a rerun, false if it is not
+     */
+    public function isRerun()
+    {
+        return $this->getPenalty() === 'RRN';
     }
 
     /**
@@ -190,6 +243,7 @@ class Line
 
     /**
      * Get the PAX time of the run.
+     * AXware has already factored in cone penalty seconds, if any
      *
      * @throws LineException if the run is missing a PAX time
      * @return string
@@ -254,5 +308,14 @@ class Line
     private function getCategoryByPrefix($prefix)
     {
         return $this->file->getCategoryByPrefix($prefix);
+    }
+
+    /**
+     * Convenience to get the seconds per cone penalty from the file
+     * @return int
+     */
+    private function getSecondsPerCone()
+    {
+        return $this->file->getSecondsPerCone();
     }
 }
