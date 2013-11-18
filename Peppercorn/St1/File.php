@@ -43,6 +43,7 @@ class File
 
         $this->buildAndSetCategoryPrefixes($categories);
         $this->buildAndSetCategoriesByPrefix($categories);
+        $this->secondsPerCone = $secondsPerCone;
     }
 
     /**
