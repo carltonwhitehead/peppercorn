@@ -526,6 +526,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetTimeRawForSort(Line $line, $expected)
     {
         $actual = $line->getTimeRawForSort($line);
+        $this->assertInternalType('numeric', $actual);
         $this->assertEquals($expected, $actual);
     }
 
