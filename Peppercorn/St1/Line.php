@@ -152,13 +152,7 @@ class Line
      */
     public function getTimeRawWithPenalty()
     {
-        $time = $this->getTimeRaw();
-        if ($this->hasConePenalty()) {
-            $time += ((float) $this->getPenalty() * (float) $this->getSecondsPerCone());
-            $time = round($time, 3);
-            $time = number_format($time, 3);
-        }
-        return (string) $time;
+        return (string) $this->applyConePenaltyTo($this->getTimeRaw());
     }
 
     /**
@@ -282,6 +276,19 @@ class Line
     }
 
     /**
+     * Gets the pax time of the run for sort.
+     * @return float the pax time of the run for sort. returns pax time with cone penalty if applicable, or if DNF, RRN, or otherwise disqualified, returns PHP_INT_MAX
+     */
+    public function getTimePaxForSort()
+    {
+        if ($this->isClean() or $this->hasConePenalty()) {
+            return $this->applyConePenaltyTo($this->getTimePax());
+        } else {
+            return PHP_INT_MAX;
+        }
+    }
+
+    /**
      * Get the UNIX timestamp of the run
      * @return number
      */
@@ -312,6 +319,21 @@ class Line
     public function getDiffFromFirst()
     {
         return $this->parse('diff1');
+    }
+
+    /**
+     * apply the event's cone penalty to the time
+     * @param numeric $time
+     * @return numeric the time with cone penalty applied
+     */
+    private function applyConePenaltyTo($time)
+    {
+        if ($this->hasConePenalty()) {
+            $time += ((float) $this->getPenalty() * (float) $this->getSecondsPerCone());
+            $time = round($time, 3);
+            $time = number_format($time, 3);
+        }
+        return $time;
     }
 
     /**

@@ -543,6 +543,30 @@ class LineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Line $line
+     * @param numeric $expected
+     *
+     * @dataProvider providerGetTimePaxForSort
+     */
+    public function testGetTimePaxForSort(Line $line, $expected)
+    {
+        $actual = $line->getTimePaxForSort();
+        $this->assertInternalType('numeric', $actual);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providerGetTimePaxForSort()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), 47.678), // 52.444 raw, paxed, +1
+            array($file->getLine(1), 43.200), // 51.490 raw, paxed, clean
+            array($file->getLine(8), PHP_INT_MAX), // 42.432 raw, paxed, DNF
+            array($file->getLine(16), PHP_INT_MAX) // 67.648 raw, paxed, RRN
+        );
+    }
+
+    /**
+     * @param Line $line
      * @param boolean $expected
      *
      * @dataProvider providerIsClean
