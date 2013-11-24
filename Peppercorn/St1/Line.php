@@ -162,6 +162,28 @@ class Line
     }
 
     /**
+     * Gets the raw time of the run for sort.
+     * @return float the raw time of the run for sort. returns raw time with cone penalty if applicable, or if DNR, RRN, or otherwise disqualified, returns PHP_INT_MAX
+     */
+    public function getTimeRawForSort()
+    {
+        if ($this->isClean() or $this->hasConePenalty()) {
+            return $this->getTimeRawWithPenalty();
+        } else {
+            return PHP_INT_MAX;
+        }
+    }
+
+    /**
+     * Find whether this run is clean
+     * @return boolean true if no penalty, false if penalty
+     */
+    public function isClean()
+    {
+        return !$this->hasPenalty();
+    }
+
+    /**
      * Find whether this run has any penalty
      * @return boolean true if the run has a penalty, false if it does not
      */

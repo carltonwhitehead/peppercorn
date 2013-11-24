@@ -517,6 +517,52 @@ class LineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param Line $line
+     * @param float $expected
+     *
+     * @dataProvider providerGetTimeRawForSort
+     */
+    public function testGetTimeRawForSort(Line $line, $expected)
+    {
+        $actual = $line->getTimeRawForSort($line);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providerGetTimeRawForSort()
+    {
+        $file = $this->getValidFile();
+        return array(
+            array($file->getLine(0), 54.444), // 52.444 +1
+            array($file->getLine(1), 51.490), // 51.490 clean
+            array($file->getLine(8), PHP_INT_MAX), // 42.432 +DNF
+            array($file->getLine(16), PHP_INT_MAX), // 67.648 +RRN
+        );
+    }
+
+    /**
+     * @param Line $line
+     * @param boolean $expected
+     *
+     * @dataProvider providerIsClean
+     */
+    public function testIsClean(Line $line, $expected)
+    {
+        $actual = $line->isClean();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providerIsClean()
+    {
+        $file = $this->getValidFile();
+        return array(
+        	array($file->getLine(0), false), // not clean because +1
+        	array($file->getLine(1), true), // clean
+        	array($file->getLine(8), false), // not clean because DNF
+        	array($file->getLine(16), false) // not clean because RRN
+        );
+    }
+
     private function getValidFile()
     {
         return new File($this->getValidContent(), $this->getMockCategories());
