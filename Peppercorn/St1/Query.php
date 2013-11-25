@@ -27,6 +27,12 @@ class Query
      */
     private $testLinesDirection;
 
+    /**
+     * A callable to pass into usort when sorting the results of the query
+     * @var callable
+     */
+    private $sort;
+
     public function __construct(File $file)
     {
         $this->file = $file;
@@ -67,10 +73,22 @@ class Query
     }
 
     /**
+     * Specify the callable to sort the results
+     * @param callable $sort
+     * @return \Peppercorn\St1\Query
+     */
+    public function orderBy(callable $sort)
+    {
+        $this->sort = $sort;
+        return $this;
+    }
+
+    /**
      * @return array Line objects
      */
     public function execute()
     {
+        // filter results using Where tests
         switch ($this->testLinesDirection) {
         	case self::$TEST_WHERES_DESCENDING:
         	    $result = $this->testLinesDescending();
@@ -79,6 +97,10 @@ class Query
         	default:
         	    $result = $this->testLinesAscending();
         	    break;
+        }
+        // order results by sort
+        if ($this->sort !== null) {
+            usort($result, $this->sort);
         }
         return $result;
     }

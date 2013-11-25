@@ -170,6 +170,39 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testOrderBy()
+    {
+        $query = $this->getQueryOfValidFile();
+        $result = $query->orderBy(function (Line $a, Line $b) {
+            return 0;
+        });
+        $this->assertAttributeInternalType('callable', 'sort', $query);
+        $this->assertInstanceOf(get_class($query), $result);
+    }
+
+    public function testSortedQueryResults()
+    {
+        // an absurd sort by raw time descending (slowest first, fastest last)
+        $sortByRawTimeDesc = function(Line $a, Line $b) {
+            $aTime = $a->getTimeRawForSort();
+            $bTime = $b->getTimeRawForSort();
+            if ($aTime === $bTime) {
+                return 0;
+            }
+            return $a->getTimeRawForSort() > $b->getTimeRawForSort()
+                ? -1 : 1;
+        };
+        $file = $this->getValidFile();
+        $query = new Query($file);
+        $query->orderBy($sortByRawTimeDesc);
+        $results = $query->execute();
+        $this->assertCount($file->getLineCount(), $results);
+        $this->assertEquals(PHP_INT_MAX, $results[0]->getTimeRawForSort()); // DNF
+        $this->assertEquals(PHP_INT_MAX, $results[1]->getTimeRawForSort()); // DNF
+        $this->assertEquals(60.713, $results[13]->getTimeRawForSort()); // 60.713 clean
+        $this->assertEquals(59.970, $results[14]->getTimeRawForSort()); // 59.970 clean
+    }
+
     private function getQueryOfValidFile()
     {
         $file = $this->getValidFile();
