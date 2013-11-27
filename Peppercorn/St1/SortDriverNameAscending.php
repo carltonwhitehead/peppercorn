@@ -3,7 +3,7 @@ namespace Peppercorn\St1;
 
 class SortDriverNameAscending implements SortProvider
 {
-    public function getSort()
+    public static function getSort()
     {
         return function(Line $a, Line $b)
         {
