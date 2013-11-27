@@ -31,6 +31,7 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
         $file = $this->getValidFile();
         $driverNameAscending = array('Peppercorn\\St1\\SortDriverNameAscending', 'getSort');
         $timePaxAscending = array('Peppercorn\\St1\\SortTimePaxAscending', 'getSort');
+        $timeRawAscending = array('Peppercorn\\St1\\SortTimeRawAscending', 'getSort');
         return array(
             // driver name ascending
             array($driverNameAscending, $file->getLine(0), $file->getLine(1), 1), // zach, carlton
@@ -40,6 +41,10 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
             array($timePaxAscending, $file->getLine(0), $file->getLine(1), -1), // 53.336, 60.063
             array($timePaxAscending, $file->getLine(6), $file->getLine(6), 0), // 55.674, 55.674
             array($timePaxAscending, $file->getLine(12), $file->getLine(7), 1), // DNF, 60.717
+            // time raw ascending
+            array($timeRawAscending, $file->getLine(0), $file->getLine(1), -1), // 63.572, 71.589
+            array($timeRawAscending, $file->getLine(6), $file->getLine(6), 0), // 66.358, 66.358
+            array($timeRawAscending, $file->getLine(10), $file->getLine(13), 1), // 60.713, 59.970
         );
     }
 
