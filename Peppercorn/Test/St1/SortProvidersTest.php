@@ -18,6 +18,7 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
      */
     public function testSort(array $getSort, Line $a, Line $b, $expected)
     {
+        $this->assertCount(2, $getSort);
         $sort = $getSort();
         $this->assertInternalType('callable', $sort);
         $actual = $sort($a, $b);
@@ -29,10 +30,16 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
     {
         $file = $this->getValidFile();
         $driverNameAscending = array('Peppercorn\\St1\\SortDriverNameAscending', 'getSort');
+        $timePaxAscending = array('Peppercorn\\St1\\SortTimePaxAscending', 'getSort');
         return array(
+            // driver name ascending
             array($driverNameAscending, $file->getLine(0), $file->getLine(1), 1), // zach, carlton
             array($driverNameAscending, $file->getLine(2), $file->getLine(4), 0), // zach, zach
             array($driverNameAscending, $file->getLine(5), $file->getLine(9), -1), // carlton, zach
+            // time pax ascending
+            array($timePaxAscending, $file->getLine(0), $file->getLine(1), -1), // 53.336, 60.063
+            array($timePaxAscending, $file->getLine(6), $file->getLine(6), 0), // 55.674, 55.674
+            array($timePaxAscending, $file->getLine(12), $file->getLine(7), 1), // DNF, 60.717
         );
     }
 
