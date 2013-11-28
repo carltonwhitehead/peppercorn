@@ -282,7 +282,7 @@ class Line
     public function getTimePaxForSort()
     {
         if ($this->isClean() or $this->hasConePenalty()) {
-            return $this->applyConePenaltyTo($this->getTimePax());
+            return $this->getTimePax();
         } else {
             return PHP_INT_MAX;
         }
