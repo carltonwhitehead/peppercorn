@@ -72,6 +72,7 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
             array($driverClassAscending, $file->getLine(0), $file->getLine(15), self::GT), // open STR, open STC
             array($driverClassAscending, $file->getLine(15), $file->getLine(21), self::GT), // open STC, TIR BS
             array($driverClassAscending, $file->getLine(21), $file->getLine(15), self::LT), // TIR BS, open STC
+            array($driverClassAscending, $file->getLine(27), $file->getLine(28), self::EQ), // TIR BS, open BS
         );
     }
 
