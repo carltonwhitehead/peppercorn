@@ -48,6 +48,7 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
         $timePaxAscending = array('Peppercorn\\St1\\SortTimePaxAscending', 'getSort');
         $timeRawAscending = array('Peppercorn\\St1\\SortTimeRawAscending', 'getSort');
         $driverCategoryAscending = array('Peppercorn\\St1\\SortDriverCategoryAscending', 'getSort');
+        $driverClassAscending = array('Peppercorn\\St1\\SortDriverClassAscending', 'getSort');
         return array(
             // driver name ascending
             array($driverNameAscending, $file->getLine(0), $file->getLine(1), self::GT), // zach, carlton
@@ -66,6 +67,11 @@ class SortProvidersTest extends \PHPUnit_Framework_TestCase
             array($driverCategoryAscending, $file->getLine(0), $file->getLine(15), self::EQ), // open STR, open STC
             array($driverCategoryAscending, $file->getLine(15), $file->getLine(24), self::LT), // open STC, TIR BS
             array($driverCategoryAscending, $file->getLine(24), $file->getLine(15), self::GT), // TIR BS, open STC
+            // driver class ascending
+            array($driverClassAscending, $file->getLine(0), $file->getLine(1), self::EQ), // open STR, open STR
+            array($driverClassAscending, $file->getLine(0), $file->getLine(15), self::GT), // open STR, open STC
+            array($driverClassAscending, $file->getLine(15), $file->getLine(21), self::GT), // open STC, TIR BS
+            array($driverClassAscending, $file->getLine(21), $file->getLine(15), self::LT), // TIR BS, open STC
         );
     }
 
