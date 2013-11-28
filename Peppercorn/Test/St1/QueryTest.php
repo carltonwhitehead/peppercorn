@@ -6,6 +6,8 @@ use Peppercorn\St1\File;
 use Peppercorn\St1\Line;
 use Peppercorn\St1\Query;
 use Peppercorn\St1\WhereDriverIs;
+use Peppercorn\St1\Grouper;
+use Peppercorn\St1\GroupByDriver;
 
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
@@ -201,6 +203,29 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(PHP_INT_MAX, $results[1]->getTimeRawForSort()); // DNF
         $this->assertEquals(60.713, $results[13]->getTimeRawForSort()); // 60.713 clean
         $this->assertEquals(59.970, $results[14]->getTimeRawForSort()); // 59.970 clean
+    }
+    
+    /**
+     * @param Query $query
+     * @param Grouper $distinct
+     * 
+     * @dataProvider providerDistinct
+     */
+    public function testDistinct(Query $query, Grouper $distinct)
+    {
+        $this->assertAttributeEmpty('distinct', $query);
+        $actual = $query->distinct($distinct);
+        $this->assertAttributeEquals($distinct, 'distinct', $query);
+        $this->assertInstanceOf(get_class($query), $actual);
+    }
+    
+    public function providerDistinct()
+    {
+        $validFile = $this->getQueryOfValidFile();
+        $groupByDriver = new GroupByDriver();
+        return array(
+        	array($validFile, $groupByDriver)
+        );
     }
 
     private function getQueryOfValidFile()

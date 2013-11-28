@@ -1,6 +1,7 @@
 <?php
 namespace Peppercorn\St1;
 
+use Phava\Base\Preconditions;
 class Query
 {
 
@@ -32,6 +33,12 @@ class Query
      * @var callable
      */
     private $sort;
+    
+    /**
+     * A Grouper to use for narrowing the query to distinct Lines.
+     * @var Grouper
+     */
+    private $distinct;
 
     public function __construct(File $file)
     {
@@ -82,6 +89,18 @@ class Query
         $this->sort = $sort;
         return $this;
     }
+    
+    /**
+     * Specify a Grouper to use for narrowing the results to distinct lines.
+     * For example, if you wanted the fastest runs for each driver, you would pass a grouper that keys by driver (category/class/number)
+     * @param Grouper $distinct
+     * @return \Peppercorn\St1\Query
+     */
+    public function distinct(Grouper $distinct)
+    {
+        $this->distinct = $distinct;
+        return $this;
+    }
 
     /**
      * @return array Line objects
@@ -101,6 +120,9 @@ class Query
         // order results by sort
         if ($this->sort !== null) {
             usort($result, $this->sort);
+        }
+        if ($this->distinct !== null) {
+            $result = $this->filterDistinct($result);
         }
         return $result;
     }
@@ -152,6 +174,23 @@ class Query
             }
         }
         return true;
+    }
+    
+    /**
+     * Filter the Line objects into an array containing only distinct Line objects according to the $distinct Grouper.
+     * @param array $lines
+     */
+    private function filterDistinct(array $lines)
+    {
+        Preconditions::checkState($this->distinct instanceof Grouper);
+        $result = array();
+        foreach ($lines as /* @var $line Line */ $line) {
+            $key = $this->distinct->getGroupKey($line);
+            if (!array_key_exists($key, $result)) {
+                $result[$key] = $line;
+            }
+        }
+        return array_values($result);
     }
 
 }
