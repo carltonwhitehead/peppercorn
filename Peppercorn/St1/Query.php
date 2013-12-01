@@ -39,6 +39,12 @@ class Query
      * @var Grouper
      */
     private $distinct;
+    
+    /**
+     * A Grouper to use for grouping Line results
+     * @var Grouper
+     */
+    private $groupBy;
 
     public function __construct(File $file)
     {
@@ -101,6 +107,24 @@ class Query
         $this->distinct = $distinct;
         return $this;
     }
+    
+    /**
+     * Specify a Grouper to use for grouping the Line resuts.
+     * When results are grouped, they will be returned in a multidimensional array, as follows:
+     * $result = array(
+     *      0 => array('lines' => array({Line objects of first group})), 
+     *      1 => array('lines' => array({Line objects of second group}))
+     * );
+     * The array of Line objects is assigned to the 'lines' key to allow for easy addition of 
+     * metadata (count of clean runs vs dirty, sum of cones, etc) into the group at other keys.
+     * @param Grouper $groupBy
+     * @return \Peppercorn\St1\Query
+     */
+    public function groupBy(Grouper $groupBy)
+    {
+        $this->groupBy = $groupBy;
+        return $this;
+    }
 
     /**
      * @return array Line objects
@@ -123,6 +147,9 @@ class Query
         }
         if ($this->distinct !== null) {
             $result = $this->filterDistinct($result);
+        }
+        if ($this->groupBy !== null) {
+            $result = $this->groupLines($result);
         }
         return $result;
     }
@@ -189,6 +216,25 @@ class Query
             if (!array_key_exists($key, $result)) {
                 $result[$key] = $line;
             }
+        }
+        return array_values($result);
+    }
+    
+    /**
+     * Group the lines into a multidimensional array using the $groupBy Grouper
+     * @param array $lines
+     * @return array multidimensional array of grouped Line objects
+     */
+    private function groupLines(array $lines)
+    {
+        Preconditions::checkState($this->groupBy instanceof Grouper);
+        $result = array();
+        foreach ($lines as /* @var $line Line */ $line) {
+            $key = $this->groupBy->getGroupKey($line);
+            if (!array_key_exists($key, $result)) {
+                $result[$key] = array('lines' => array());
+            }
+            $result[$key]['lines'][] = $line;
         }
         return array_values($result);
     }
