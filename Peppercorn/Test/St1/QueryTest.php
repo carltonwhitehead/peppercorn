@@ -277,13 +277,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithGroupByDrivers(Query $query)
     {
         $actual = $query->execute();
-        $this->assertCount(2, $actual);
+        $this->assertCount(2, $actual); // two drivers, Zach and Carlton
         $this->assertArrayHasKey(0, $actual); // Zach's
         $this->assertArrayHasKey('lines', $actual[0]);
-        $this->assertCount(8, $actual[0]['lines']); // 7 timed runs, 1 rerun
+        $this->assertCount(8, $actual[0]['lines']); // Zach had 7 timed runs, 1 rerun
         $this->assertArrayHasKey(1, $actual); // Carlton's
         $this->assertArrayHasKey('lines', $actual[1]);
-        $this->assertCount(7, $actual[1]['lines']); // 7 timed runs
+        $this->assertCount(7, $actual[1]['lines']); // Carlton had 7 timed runs
     }
     
     public function providerExecuteWithGroupByDrivers()
