@@ -249,6 +249,25 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         	array($this->getQueryOfValidFile(), new GroupByDriver())
         );
     }
+    
+    /**
+     * @param Query $query a query already set up to execute with distinct drivers
+     * 
+     * @dataProvider providerExecuteWithDistinctDrivers
+     */
+    public function testExecuteWithDistinctDrivers(Query $query)
+    {
+        $actual = $query->execute();
+        $this->assertCount(2, $actual);
+        $this->assertEquals('Zach Hill', $actual[0]->getDriverName());
+        $this->assertEquals('Carlton Whitehead', $actual[1]->getDriverName());
+    }
+    
+    public function providerExecuteWithDistinctDrivers()
+    {
+        $query = $this->getQueryOfValidFile();
+        return array(array($query->distinct(new GroupByDriver())));
+    }
 
     private function getQueryOfValidFile()
     {
