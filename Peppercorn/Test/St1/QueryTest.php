@@ -227,6 +227,27 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         	array($validFile, $groupByDriver)
         );
     }
+    
+    /**
+     * @param Query $query
+     * @param Grouper $groupBy
+     * 
+     * @dataProvider providerGroupBy
+     */
+    public function testGroupBy(Query $query, Grouper $groupBy)
+    {
+        $this->assertAttributeEmpty('groupBy', $query);
+        $actual = $query->groupBy($groupBy);
+        $this->assertAttributeEquals($groupBy, 'groupBy', $query);
+        $this->assertTrue($query === $actual);
+    }
+    
+    public function providerGroupBy()
+    {
+        return array(
+        	array($this->getQueryOfValidFile(), new GroupByDriver())
+        );
+    }
 
     private function getQueryOfValidFile()
     {
