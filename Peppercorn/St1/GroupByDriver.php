@@ -5,7 +5,7 @@ class GroupByDriver implements Grouper
 {
     public function getGroupKey(Line $line)
     {
-        $category = $line->getDriverCategory();
+        $category = $line->getDriverCategory()->getPrefix();
         $class = $line->getDriverClass();
         $number = $line->getDriverNumber();
         return "_class_{$category}{$class}_number_{$number}";
