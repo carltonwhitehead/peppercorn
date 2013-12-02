@@ -40,7 +40,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTestLinesAscending(Query $query)
     {
-        $query->setTestLinesAscending();
+        $actual = $query->setTestLinesAscending();
+        $this->assertTrue($query === $actual);
         $this->assertAttributeEquals('ascending', 'testLinesDirection', $query);
     }
 
@@ -51,7 +52,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTestLinesDescending(Query $query)
     {
-        $query->setTestLinesDescending();
+        $actual = $query->setTestLinesDescending();
+        $this->assertTrue($query === $actual);
         $this->assertAttributeEquals('descending', 'testLinesDirection', $query);
     }
 
@@ -62,9 +64,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testWhere(Query $query, WhereDriverIs $where)
     {
-        $actualReturnFromWhere = $query->where($where);
-        $expectedReturnFromWhere = get_class($query);
-        $this->assertInstanceOf($expectedReturnFromWhere, $actualReturnFromWhere);
+        $actual = $query->where($where);
+        $this->assertTrue($query === $actual);
         $this->assertAttributeCount(1, 'wheres', $query);
         $this->assertAttributeContains($where, 'wheres', $query);
     }
@@ -175,11 +176,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testOrderBy()
     {
         $query = $this->getQueryOfValidFile();
-        $result = $query->orderBy(function (Line $a, Line $b) {
+        $actual = $query->orderBy(function (Line $a, Line $b) {
             return 0;
         });
         $this->assertAttributeInternalType('callable', 'sort', $query);
-        $this->assertInstanceOf(get_class($query), $result);
+        $this->assertTrue($query === $actual);
     }
 
     public function testSortedQueryResults()
@@ -216,7 +217,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEmpty('distinct', $query);
         $actual = $query->distinct($distinct);
         $this->assertAttributeEquals($distinct, 'distinct', $query);
-        $this->assertInstanceOf(get_class($query), $actual);
+        $this->assertTrue($query === $actual);
     }
     
     public function providerDistinct()
