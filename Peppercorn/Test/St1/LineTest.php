@@ -138,8 +138,11 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTimeRawWithBadContent(Line $line)
     {
-        $this->setExpectedException(get_class(new LineException()));
-        $line->getTimeRaw();
+        try {
+            $line->getTimeRaw();
+        } catch (Exception $e) {
+            $this->fail('Should no longer throw on getTimeRaw');
+        }
     }
 
     public function providerGetTimeRawWithBadContent()
@@ -295,8 +298,11 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTimePaxWithBadContent(Line $line)
     {
-        $this->setExpectedException(get_class(new LineException()));
-        $line->getTimePax();
+        try {
+            $line->getTimePax();
+        } catch (Exception $e) {
+            $this->fail('Should no longer throw on getTimePax()');
+        }
     }
 
     public function providerGetTimePaxWithBadContent()

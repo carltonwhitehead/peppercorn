@@ -133,17 +133,11 @@ class Line
      * AXware has NOT factored in cone penalty seconds, if any.
      * Be sure to call this method only if you don't need penalty seconds included.
      *
-     * @throws LineException if the line is missing a raw time
      * @return string
      */
     public function getTimeRaw()
     {
-        $timeRaw = $this->parse('tm');
-        if (Strings::isEmpty($timeRaw)) {
-            static $error = 'Invalid state file line is missing raw time.';
-            throw new LineException($error);
-        }
-        return $timeRaw;
+        return $this->parse('tm');
     }
 
     /**
@@ -262,17 +256,11 @@ class Line
      * Get the PAX time of the run.
      * AXware has already factored in cone penalty seconds, if any
      *
-     * @throws LineException if the run is missing a PAX time
      * @return string
      */
     public function getTimePax()
     {
-        $timePax = strtoupper($this->parse('paxed'));
-        if (Strings::isEmpty($timePax)) {
-            static $error = 'Invalid state file line is missing pax time.';
-            throw new LineException($error);
-        }
-        return $timePax;
+        return strtoupper($this->parse('paxed'));
     }
 
     /**
