@@ -68,6 +68,15 @@ class Line
     {
         return $this->parse('run');
     }
+    
+    /**
+     * Find whether the line has a run number
+     * @return boolean true if the line has a run number, otherwise false
+     */
+    public function hasRunNumber()
+    {
+        return Strings::isNotEmpty($this->getRunNumber());
+    }
 
     /**
      * Get the driver's Category
@@ -172,7 +181,8 @@ class Line
      */
     public function getTimeRawForSort()
     {
-        if ($this->isClean() or $this->hasConePenalty()) {
+        if ($this->hasRunNumber()
+            and ($this->isClean() or $this->hasConePenalty())) {
             return $this->getTimeRawWithPenalty();
         } else {
             return PHP_INT_MAX;

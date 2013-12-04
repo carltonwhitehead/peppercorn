@@ -313,7 +313,64 @@ class RawResultsTest extends ResultsTest
             )
         );
         // points5
-        $provider[4][] = array();
+        $provider[4][] = array(
+        	0 => array( // 1st
+                self::KEY_CLASS => 'KM',
+                self::KEY_NUMBER => '388',
+                self::KEY_TIME => '48.991'
+            ),
+            1 => array( // 2nd
+                self::KEY_CLASS => 'CSP',
+                self::KEY_NUMBER => '46',
+                self::KEY_TIME => '50.634'
+            ),
+            2 => array( // 3rd
+                self::KEY_CLASS => 'SS',
+                self::KEY_NUMBER => '1',
+                self::KEY_TIME => '50.814'
+            ),
+            9 => array( // 10th
+                self::KEY_CLASS => 'STR',
+                self::KEY_NUMBER => '8',
+                self::KEY_TIME => '52.283'
+            ),
+            19 => array( // 20th
+                self::KEY_CLASS => 'STR',
+                self::KEY_NUMBER => '84',
+                self::KEY_TIME => '53.850'
+                // TODO: investigate failure
+            ),
+            29 => array( // 30th
+                self::KEY_CLASS => 'STR',
+                self::KEY_NUMBER => '25',
+                self::KEY_TIME => '55.244'
+            ),
+            39 => array( // 40th
+                self::KEY_CLASS => 'OFBSP',
+                self::KEY_NUMBER => '8',
+                self::KEY_TIME => '57.372'
+            ),
+            49 => array( // 50th
+                self::KEY_CLASS => 'STR',
+                self::KEY_NUMBER => '7',
+                self::KEY_TIME => '60.043'
+            ),
+            58 => array( // 59th
+                self::KEY_CLASS => 'NOVSTU',
+                self::KEY_NUMBER => '30',
+                self::KEY_TIME => '64.270'
+            ),
+            59 => array( // 60th
+                self::KEY_CLASS => 'ES',
+                self::KEY_NUMBER => '77',
+                self::KEY_TIME => '65.826'
+            ),
+            60 => array( // 61st
+                self::KEY_CLASS => 'NOVSTF',
+                self::KEY_NUMBER => '2',
+                self::KEY_TIME => '75.994'
+            )
+        );
         // points6
         $provider[5][] = array();
         // points7
