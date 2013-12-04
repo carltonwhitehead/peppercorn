@@ -32,10 +32,6 @@ class RawResultsTest extends ResultsTest
         foreach ($expected as $index => $values) {
             $line = $actual[$index]; /* @var $line Line */
             try {
-                if ($index == 9) {
-                    // TODO: discover why this one case is failing
-                    continue;
-                }
                 $this->assertEquals($values[self::KEY_CLASS], $line->getDriverClassRaw());
                 $this->assertEquals($values[self::KEY_NUMBER], $line->getDriverNumber());
                 $this->assertEquals($values[self::KEY_TIME], $line->getTimeRawWithPenalty());
@@ -91,6 +87,16 @@ class RawResultsTest extends ResultsTest
                 self::KEY_NUMBER => '15',
                 self::KEY_TIME => '55.147'
             ),
+            39 => array( // 40th
+                self::KEY_CLASS => 'OFBS',
+                self::KEY_NUMBER => '6',
+                self::KEY_TIME => '56.733'
+            ),
+            49 => array( // 50th
+                self::KEY_CLASS => 'STF',
+                self::KEY_NUMBER => '87',
+                self::KEY_TIME => '58.160'
+            ),
             55 => array( // 56th
                 self::KEY_CLASS => 'CSP',
                 self::KEY_NUMBER => '24',
@@ -103,16 +109,23 @@ class RawResultsTest extends ResultsTest
             )
         );
         // points2
+        $provider[1][] = array();
         // points3
+        $provider[2][] = array();
         // points4
+        $provider[3][] = array();
         // points5
+        $provider[4][] = array();
         // points6
+        $provider[5][] = array();
         // points7
+        $provider[6][] = array();
         // points8
+        $provider[7][] = array();
         // points9
+        $provider[8][] = array();
         // nonpoints
-//         var_dump($provider);
-//         die();
+        $provider[9][] = array();
         return $provider;
     }
 }
