@@ -203,10 +203,10 @@ class Query
      */
     private function testLine(Line $line)
     {
+        if ($line->isValid() === false) {
+            return false;
+        }
         foreach ($this->wheres as /* @var $where Where */ $where) {
-            if ($line->isValid() === false) {
-                return false;
-            }
             if ($where->test($line) === false) {
                 return false;
             }
