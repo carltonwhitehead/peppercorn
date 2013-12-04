@@ -204,6 +204,9 @@ class Query
     private function testLine(Line $line)
     {
         foreach ($this->wheres as /* @var $where Where */ $where) {
+            if ($line->isValid() === false) {
+                return false;
+            }
             if ($where->test($line) === false) {
                 return false;
             }

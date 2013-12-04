@@ -325,6 +325,22 @@ class Line
     {
         return $this->parse('diff1');
     }
+    
+    /**
+     * Check if the line is valid
+     * @return boolean true if the line is valid, false if invalid
+     */
+    public function isValid()
+    {
+        try {
+            $this->getDriverClass();
+            $this->getDriverNumber();
+            $this->getDriverName();
+        } catch (LineException $le) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * apply the event's cone penalty to the time
