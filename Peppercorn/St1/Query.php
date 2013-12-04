@@ -163,7 +163,11 @@ class Query
         $result = array();
         for ($i = 0; $i < $this->file->getLineCount(); $i++) {
             $line = $this->file->getLine($i);
-            if (!$this->testLine($line)) {
+            try {
+                if (!$this->testLine($line)) {
+                    continue;
+                }
+            } catch (LineException $le) {
                 continue;
             }
             $result[] = $line;
@@ -180,7 +184,11 @@ class Query
         $result = array();
         for ($i = $this->file->getLineCount() - 1; $i >= 0; $i--) {
             $line = $this->file->getLine($i);
-            if (!$this->testLine($line)) {
+            try {
+                if (!$this->testLine($line)) {
+                    continue;
+                }
+            } catch (LineException $le) {
                 continue;
             }
             $result[] = $line;

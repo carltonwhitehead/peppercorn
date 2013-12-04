@@ -90,7 +90,7 @@ class Line
         return $category;
     }
 
-    /**
+        /**
      * Get the class of the driver.
      * Automatically trims the category if the driver is in a category with a prefix (such as NOV, X, RT, etc)
      *
@@ -99,11 +99,28 @@ class Line
      */
     public function getDriverClass()
     {
-        $classString = strtoupper($this->parse('class'));
+        $classString = $this->getDriverClassRaw();
         $categoryPrefix = $this->getDriverCategory()->getPrefix();
         if (Strings::isNotEmpty($categoryPrefix)) {
             $classString = substr($classString, strlen($categoryPrefix));
         }
+        if (Strings::isEmpty($classString)) {
+            static $error = 'Invalid state file line is missing class.';
+            throw new LineException($error);
+        }
+        return $classString;
+    }
+    
+    /**
+     * Get the raw class of the driver as listed in the st1 file
+     * The st1 file combines the category and the class of the driver into a single string.
+     * 
+     * @throws LineException if no class is present in the line
+     * @return string
+     */
+    public function getDriverClassRaw()
+    {
+        $classString = strtoupper($this->parse('class'));
         if (Strings::isEmpty($classString)) {
             static $error = 'Invalid state file line is missing class.';
             throw new LineException($error);
