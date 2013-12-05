@@ -172,7 +172,11 @@ class Line
      */
     public function getTimeRawWithPenalty()
     {
-        return (string) $this->applyConePenaltyTo($this->getTimeRaw());
+        if (!$this->isDnf()) {
+            return (string) $this->applyConePenaltyTo($this->getTimeRaw());
+        } else {
+            return PHP_INT_MAX;
+        }
     }
 
     /**

@@ -435,9 +435,9 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTimeRawWithPenalty(Line $line, $expected)
     {
-        $actualTimeRawWithPenalty = $line->getTimeRawWithPenalty();
-        $this->assertInternalType('string', $actualTimeRawWithPenalty);
-        $this->assertTrue($actualTimeRawWithPenalty === $expected);
+        $actual = $line->getTimeRawWithPenalty();
+        $this->assertTrue(is_string($actual) || $actual === PHP_INT_MAX, 'Line->getTimeRawWithPenalty must return either a string or PHP_INT_MAX');
+        $this->assertTrue($actual === $expected);
     }
 
     public function providerGetTimeRawWithPenalty()
@@ -446,7 +446,7 @@ class LineTest extends \PHPUnit_Framework_TestCase
         return array(
         	array($file->getLine(0), '54.444'), // has +1
             array($file->getLine(1), '51.490'), // no penalty, time with trailing zeros
-            array($file->getLine(8), '42.432'), // has DNF
+            array($file->getLine(8), PHP_INT_MAX), // has DNF
             array($file->getLine(16), '67.648'), // has RRN
             array($file->getLine(19), '52.700') // has +1, time with trailing zeros
         );
