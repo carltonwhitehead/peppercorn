@@ -161,10 +161,20 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 133, 'NOVBS', '121', '62.469');
         $provider[] = array($result, 134, 'NOVCS', '29', '63.940');
         $provider[] = array($result, 135, 'STR', '24', PHP_INT_MAX);
-        
-        
-        
         // points9
+        $result = $results[8];
+        $provider[] = array($result, 0, 'XKM', '50', '51.762');
+        $provider[] = array($result, 1, 'STR', '80', '59.950');
+        $provider[] = array($result, 2, 'STR', '3', '59.970');
+        $provider[] = array($result, 9, 'DS', '78', '62.904');
+        $provider[] = array($result, 19, 'STU', '7', '64.632');
+        $provider[] = array($result, 29, 'OFBSP', '8', '68.425');
+        $provider[] = array($result, 39, 'NOVCS', '19', '71.487');
+        $provider[] = array($result, 49, 'XP', '1', '79.606');
+        $provider[] = array($result, 50, 'HS', '4', '79.782');
+        $provider[] = array($result, 51, 'NOVCS', '56', '85.419');
+        
+        
         
         // nonpoints
         return $provider;
