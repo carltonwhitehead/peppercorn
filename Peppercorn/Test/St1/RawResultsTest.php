@@ -509,7 +509,103 @@ class RawResultsTest extends ResultsTest
             )
         );
         // points8
-        $provider[7][] = array();
+        $provider[7][] = array(
+            0 => array( // 1st
+                self::KEY_CLASS => 'XASP',
+                self::KEY_NUMBER => '9',
+                self::KEY_TIME => '43.953'
+            ),
+            1 => array( // 2nd
+                self::KEY_CLASS => 'XDS',
+                self::KEY_NUMBER => '97',
+                self::KEY_TIME => '44.308'
+            ),
+            2 => array( // 3rd
+                self::KEY_CLASS => 'SSP',
+                self::KEY_NUMBER => '40',
+                self::KEY_TIME => '44.526'
+            ),
+            9 => array( // 10th
+                self::KEY_CLASS => 'XSTS',
+                self::KEY_NUMBER => '28',
+                self::KEY_TIME => '45.930'
+            ),
+            19 => array( // 20th
+                self::KEY_CLASS => 'SM',
+                self::KEY_NUMBER => '2',
+                self::KEY_TIME => '46.730'
+            ),
+            29 => array( // 30th
+                self::KEY_CLASS => 'SM',
+                self::KEY_NUMBER => '3',
+                self::KEY_TIME => '47.830'
+            ),
+            39 => array( // 40th
+                self::KEY_CLASS => 'STS',
+                self::KEY_NUMBER => '50',
+                self::KEY_TIME => '48.528'
+            ),
+            49 => array( // 50th
+                self::KEY_CLASS => 'RTSS',
+                self::KEY_NUMBER => '6',
+                self::KEY_TIME => '49.186'
+            ),
+            59 => array( // 60th
+                self::KEY_CLASS => 'NOVBS',
+                self::KEY_NUMBER => '45',
+                self::KEY_TIME => '50.386'
+            ),
+            69 => array( // 70th
+                self::KEY_CLASS => 'STS',
+                self::KEY_NUMBER => '12',
+                self::KEY_TIME => '51.195'
+            ),
+            79 => array( // 80th
+                self::KEY_CLASS => 'DS',
+                self::KEY_NUMBER => '115',
+                self::KEY_TIME => '52.120'
+            ),
+            89 => array( // 90th
+                self::KEY_CLASS => 'STF',
+                self::KEY_NUMBER => '127',
+                self::KEY_TIME => '52.867'
+            ),
+            99 => array( // 100th
+                self::KEY_CLASS => 'RTCS',
+                self::KEY_NUMBER => '27',
+                self::KEY_TIME => '53.987'
+            ),
+            109 => array( // 110th
+                self::KEY_CLASS => 'STU',
+                self::KEY_NUMBER => '25',
+                self::KEY_TIME => '55.168'
+            ),
+            119 => array( // 120th
+                self::KEY_CLASS => 'GS',
+                self::KEY_NUMBER => '11',
+                self::KEY_TIME => '56.944'
+            ),
+            129 => array( // 130th
+                self::KEY_CLASS => 'NOVFS',
+                self::KEY_NUMBER => '44',
+                self::KEY_TIME => '61.017'
+            ),
+            133 => array( // 134th
+                self::KEY_CLASS => 'NOVBS',
+                self::KEY_NUMBER => '121',
+                self::KEY_TIME => '62.469'
+            ),
+            134 => array( // 135th
+                self::KEY_CLASS => 'NOVCS',
+                self::KEY_NUMBER => '29',
+                self::KEY_TIME => '63.940',
+            ),
+            135 => array( // 136th
+                self::KEY_CLASS => 'STR', // TODO: investigate discrepancy
+                self::KEY_NUMBER => '24',
+                self::KEY_TIME => PHP_INT_MAX
+            )
+        );
         // points9
         $provider[8][] = array();
         // nonpoints
