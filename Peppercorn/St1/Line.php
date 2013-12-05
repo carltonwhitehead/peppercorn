@@ -182,7 +182,10 @@ class Line
     public function getTimeRawForSort()
     {
         if ($this->hasRunNumber()
-            and ($this->isClean() or $this->hasConePenalty())) {
+            and ($this->isClean() or $this->hasConePenalty())
+            and Strings::isNotEmpty($this->getTimeRaw())
+            and Strings::isNotEmpty($this->getTimePax())
+            and is_numeric($this->getTimeRaw())) {
             return $this->getTimeRawWithPenalty();
         } else {
             return PHP_INT_MAX;

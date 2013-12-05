@@ -173,10 +173,6 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 49, 'XP', '1', '79.606');
         $provider[] = array($result, 50, 'HS', '4', '79.782');
         $provider[] = array($result, 51, 'NOVCS', '56', '85.419');
-        
-        
-        
-        // nonpoints
         return $provider;
     }
 }
