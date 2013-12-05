@@ -167,7 +167,7 @@ class Line
     }
 
     /**
-     * Gets the raw time of the run with cone penalty seconds applied, if any.
+     * Gets the raw time of the run with either cone penalty, or PHP_INT_MAX if the run is a DNF
      * @return string
      */
     public function getTimeRawWithPenalty()
