@@ -54,6 +54,15 @@ class Line
         $this->file = $file;
         $this->line = $line;
     }
+    
+    /**
+     * Get the file this run came from
+     * @return \Peppercorn\St1\File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 
     /**
      * retrieve a value from the line by its key

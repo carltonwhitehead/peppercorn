@@ -272,11 +272,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @param Query $query
      * 
-     * @dataProvider providerExecuteWithGroupByDrivers
+     * @dataProvider providerExecuteGroupedWithGroupByDrivers
      */
-    public function testExecuteWithGroupByDrivers(Query $query)
+    public function testExecuteGroupedWithGroupByDrivers(Query $query)
     {
-        $actual = $query->execute();
+        $actual = $query->executeGrouped();
         $this->assertCount(2, $actual); // two drivers, Zach and Carlton
         $this->assertArrayHasKey(0, $actual); // Zach's
         $this->assertArrayHasKey('lines', $actual[0]);
@@ -286,7 +286,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(7, $actual[1]['lines']); // Carlton had 7 timed runs
     }
     
-    public function providerExecuteWithGroupByDrivers()
+    public function providerExecuteGroupedWithGroupByDrivers()
     {
         $query = $this->getQueryOfValidFile();
         return array(array($query->groupBy(new GroupByDriver())));

@@ -7,6 +7,7 @@ use Peppercorn\St1\Query;
 use Peppercorn\St1\SortTimeRawAscending;
 use Peppercorn\St1\GroupByDriver;
 use Peppercorn\St1\LineException;
+use Peppercorn\St1\SortTieBreakerByNextFastestTimeRaw;
 class RawResultsTest extends ResultsTest
 {
     /**
@@ -36,6 +37,7 @@ class RawResultsTest extends ResultsTest
             $query = new Query($file);
             $query
                 ->orderBy(SortTimeRawAscending::getSort())
+                ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
                 ->distinct(new GroupByDriver());
             $results[] = $query->execute();
         }
@@ -72,7 +74,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 0, 'DM', '14', '44.014');
         $provider[] = array($result, 1, 'STR', '0', '45.586');
         $provider[] = array($result, 2, 'SS', '1', '45.771');
-        $provider[] = array($result, 9, 'SS', '31', '47.155'); // TODO: next-fastest-run tie-breaking
+        $provider[] = array($result, 9, 'STR', '8', '47.155');
+        $provider[] = array($result, 10, 'SS', '31', '47.155');
         $provider[] = array($result, 19, 'RTCSRT', '14', '48.401');
         $provider[] = array($result, 29, 'NOVDM', '14', '49.678');
         $provider[] = array($result, 39, 'RTHSRT', '0', '50.917');
@@ -90,6 +93,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 9, 'SS', '11', '39.488');
         $provider[] = array($result, 19, 'RTESP', '89', '40.607');
         $provider[] = array($result, 29, 'RTBSP', '8', '41.554');
+        $provider[] = array($result, 31, 'RTDSP', '26', '41.681');
+        $provider[] = array($result, 32, 'RTDS', '22', '41.681');
         $provider[] = array($result, 39, 'STR', '32', '42.015');
         $provider[] = array($result, 49, 'STC', '79', '42.562');
         $provider[] = array($result, 59, 'NOVSS', '9', '43.808');
@@ -148,6 +153,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 9, 'XSTS', '28', '45.930');
         $provider[] = array($result, 19, 'SM', '2', '46.730');
         $provider[] = array($result, 29, 'SM', '3', '47.830');
+        $provider[] = array($result, 33, 'RTCS', '79', '48.099');
+        $provider[] = array($result, 34, 'RTCS', '1', '48.099');
         $provider[] = array($result, 39, 'STS', '50', '48.528');
         $provider[] = array($result, 49, 'RTSS', '6', '49.186');
         $provider[] = array($result, 59, 'NOVBS', '45', '50.386');

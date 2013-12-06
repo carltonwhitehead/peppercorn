@@ -35,6 +35,12 @@ class Query
     private $sort;
     
     /**
+     * A SortTieBreaker to use for breaking ties in the results of a simple query
+     * @var SortTieBreaker
+     */
+    private $sortTieBreaker;
+    
+    /**
      * A Grouper to use for narrowing the query to distinct Lines.
      * @var Grouper
      */
@@ -97,6 +103,17 @@ class Query
     }
     
     /**
+     * Specify the SortTieBreaker to use in case of a tie
+     * @param SortTieBreaker $sortTieBreaker
+     * @return \Peppercorn\St1\Query
+     */
+    public function breakSimpleQueryTiesWith(SortTieBreaker $sortTieBreaker)
+    {
+        $this->sortTieBreaker = $sortTieBreaker;
+        return $this;
+    }
+    
+    /**
      * Specify a Grouper to use for narrowing the results to distinct lines.
      * For example, if you wanted the fastest runs for each driver, you would pass a grouper that keys by driver (category/class/number)
      * @param Grouper $distinct
@@ -127,10 +144,13 @@ class Query
     }
 
     /**
+     * Execute a simple query
+     * Do not use this method with a Grouper set with groupBy(Grouper). It is OK to use with distinct(Grouper)
      * @return array Line objects
      */
     public function execute()
     {
+        Preconditions::checkState($this->groupBy === null, 'execute() cannot be used with groupBy()');
         // filter results using Where tests
         switch ($this->testLinesDirection) {
         	case self::$TEST_WHERES_DESCENDING:
@@ -148,9 +168,34 @@ class Query
         if ($this->distinct !== null) {
             $result = $this->filterDistinct($result);
         }
-        if ($this->groupBy !== null) {
-            $result = $this->groupLines($result);
+        if ($this->sortTieBreaker != null) {
+            $this->checkForAndBreakTies($result);
         }
+        return $result;
+    }
+    
+    /**
+     * Execute a grouped query
+     * @return array a multidimensional array of arrays of Line objects grouped by the groupBy Grouper
+     */
+    public function executeGrouped()
+    {
+        Preconditions::checkState($this->groupBy !== null, 'must call groupBy(Grouper) before calling executeGrouped()');
+        
+        // capture and clear the grouper so that execute() can be called safely
+        $groupBy = $this->groupBy;
+        $this->groupBy = null;
+        
+        $result = $this->execute();
+        
+        // pay no attention to that man behind the curtain
+        $this->groupBy = $groupBy;
+        
+        $result = $this->groupLines($result);
+        
+        // TODO: support for aggregate processing of Line objects in group (ie sum of cones, etc)
+        // TODO: support for having()
+        
         return $result;
     }
 
@@ -248,6 +293,34 @@ class Query
             $result[$key]['lines'][] = $line;
         }
         return array_values($result);
+    }
+    
+    private function checkForAndBreakTies(array $lines)
+    {
+        Preconditions::checkState($this->sort !== null, '$this->sort must be an instance of a callable');
+        Preconditions::checkState($this->sortTieBreaker !== null, '$this->sortTieBreaker must be an instance of a SortTieBreaker');
+        $stopAtLine = count($lines) - 1;
+        $noTiesBroken = false;
+        while ($noTiesBroken === false) {
+            $tiesBroken = false;
+            for ($i = 0; $i < $stopAtLine; $i++) {
+                $a = $lines[$i];
+                $b = $lines[$i + 1];
+                $sort = $this->sort;
+                if ($sort($a, $b) === 0) {
+                    $tieBreak = $this->sortTieBreaker->breakTie($a, $b);
+                    if ($tieBreak > 0) {
+                        $lines[$i] = $b;
+                        $lines[$i + 1] = $a;
+                        $tiesBroken = true;
+                    }
+                }
+            }
+            if ($tiesBroken === false) {
+                $noTiesBroken = true;
+            }
+        }
+        return $lines;
     }
 
 }
