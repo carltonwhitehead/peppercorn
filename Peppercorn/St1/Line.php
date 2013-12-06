@@ -24,6 +24,29 @@ class Line
      * @var string
      */
     private $line;
+    
+    // Generated, cached values for corresponding getters
+    private $runNumber;
+    private $driverCategory;
+    private $driverClass;
+    private $driverClassRaw;
+    private $driverNumber;
+    private $timeRaw;
+    private $timeRawWithPenalty;
+    private $timeRawForSort;
+    private $isClean;
+    private $hasPenalty;
+    private $hasConePenalty;
+    private $isDnf;
+    private $isRerun;
+    private $penalty;
+    private $driverName;
+    private $car;
+    private $carColor;
+    private $timePax;
+    private $timePaxForSort;
+    private $timestamp;
+    private $isValid;
 
     public function __construct(File $file, $line)
     {
@@ -66,7 +89,10 @@ class Line
      */
     public function getRunNumber()
     {
-        return $this->parse('run');
+        if ($this->runNumber === null) {
+            $this->runNumber = $this->parse('run');
+        }
+        return $this->runNumber;
     }
     
     /**
@@ -84,22 +110,26 @@ class Line
      */
     public function getDriverCategory()
     {
-        $classString = strtoupper($this->parse('class'));
-        /* @var $category Category */
-        $category = null;
-        foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
-            if (Strings::isNotEmpty($categoryPrefix) and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
-                $category = $this->getCategoryByPrefix($categoryPrefix);
-                break;
+        if ($this->driverCategory === null) {
+            $classString = strtoupper($this->parse('class'));
+            /* @var $category Category */
+            $category = null;
+            foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
+                if (Strings::isNotEmpty($categoryPrefix) and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
+                    $category = $this->getCategoryByPrefix($categoryPrefix);
+                    break;
+                }
             }
+            if ($category === null) {
+                $category = $this->getCategoryByPrefix('');
+            }
+            $this->driverCategory = $category;
         }
-        if ($category === null) {
-            $category = $this->getCategoryByPrefix('');
-        }
-        return $category;
+        
+        return $this->driverCategory;
     }
 
-        /**
+    /**
      * Get the class of the driver.
      * Automatically trims the category if the driver is in a category with a prefix (such as NOV, X, RT, etc)
      *
@@ -108,16 +138,19 @@ class Line
      */
     public function getDriverClass()
     {
-        $classString = $this->getDriverClassRaw();
-        $categoryPrefix = $this->getDriverCategory()->getPrefix();
-        if (Strings::isNotEmpty($categoryPrefix)) {
-            $classString = substr($classString, strlen($categoryPrefix));
+        if ($this->driverClass === null) {
+            $classString = $this->getDriverClassRaw();
+            $categoryPrefix = $this->getDriverCategory()->getPrefix();
+            if (Strings::isNotEmpty($categoryPrefix)) {
+                $classString = substr($classString, strlen($categoryPrefix));
+            }
+            if (Strings::isEmpty($classString)) {
+                static $error = 'Invalid state file line is missing class.';
+                throw new LineException($error);
+            }
+            $this->driverClass = $classString;
         }
-        if (Strings::isEmpty($classString)) {
-            static $error = 'Invalid state file line is missing class.';
-            throw new LineException($error);
-        }
-        return $classString;
+        return $this->driverClass;
     }
     
     /**
@@ -129,12 +162,15 @@ class Line
      */
     public function getDriverClassRaw()
     {
-        $classString = strtoupper($this->parse('class'));
-        if (Strings::isEmpty($classString)) {
-            static $error = 'Invalid state file line is missing class.';
-            throw new LineException($error);
+        if ($this->driverClassRaw === null) {
+            $classString = strtoupper($this->parse('class'));
+            if (Strings::isEmpty($classString)) {
+                static $error = 'Invalid state file line is missing class.';
+                throw new LineException($error);
+            }
+            $this->driverClassRaw = $classString;
         }
-        return $classString;
+        return $this->driverClassRaw;
     }
 
     /**
@@ -146,12 +182,15 @@ class Line
      */
     public function getDriverNumber()
     {
-        $number = $this->parse('number');
-        if (Strings::isEmpty($number)) {
-            static $error = 'Invalid state file line is missing driver number.';
-            throw new LineException($error);
+        if ($this->driverNumber === null) {
+            $number = $this->parse('number');
+            if (Strings::isEmpty($number)) {
+                static $error = 'Invalid state file line is missing driver number.';
+                throw new LineException($error);
+            }
+            $this->driverNumber = $number;
         }
-        return $number;
+        return $this->driverNumber;
     }
 
     /**
@@ -163,7 +202,10 @@ class Line
      */
     public function getTimeRaw()
     {
-        return $this->parse('tm');
+        if ($this->timeRaw === null) {
+            $this->timeRaw = $this->parse('tm');
+        }
+        return $this->timeRaw;
     }
 
     /**
@@ -172,11 +214,15 @@ class Line
      */
     public function getTimeRawWithPenalty()
     {
-        if (!$this->isDnf()) {
-            return (string) $this->applyConePenaltyTo($this->getTimeRaw());
-        } else {
-            return PHP_INT_MAX;
+        if ($this->timeRawWithPenalty === null) {
+            if (!$this->isDnf()) {
+                $timeRawWithPenalty = (string) $this->applyConePenaltyTo($this->getTimeRaw());
+            } else {
+                $timeRawWithPenalty = PHP_INT_MAX;
+            }
+            $this->timeRawWithPenalty = $timeRawWithPenalty;
         }
+        return $this->timeRawWithPenalty;
     }
 
     /**
@@ -185,15 +231,19 @@ class Line
      */
     public function getTimeRawForSort()
     {
-        if ($this->hasRunNumber()
-            and ($this->isClean() or $this->hasConePenalty())
-            and Strings::isNotEmpty($this->getTimeRaw())
-            and Strings::isNotEmpty($this->getTimePax())
-            and is_numeric($this->getTimeRaw())) {
-            return $this->getTimeRawWithPenalty();
-        } else {
-            return PHP_INT_MAX;
+        if ($this->timeRawForSort === null) {
+            if ($this->hasRunNumber()
+                and ($this->isClean() or $this->hasConePenalty())
+                and Strings::isNotEmpty($this->getTimeRaw())
+                and Strings::isNotEmpty($this->getTimePax())
+                and is_numeric($this->getTimeRaw())) {
+                $timeRawForSort = $this->getTimeRawWithPenalty();
+            } else {
+                $timeRawForSort = PHP_INT_MAX;
+            }
+            $this->timeRawForSort = $timeRawForSort;
         }
+        return $this->timeRawForSort;
     }
 
     /**
@@ -202,7 +252,10 @@ class Line
      */
     public function isClean()
     {
-        return !$this->hasPenalty();
+        if ($this->isClean === null) {
+            $this->isClean = !$this->hasPenalty(); 
+        }
+        return $this->isClean;
     }
 
     /**
@@ -211,7 +264,10 @@ class Line
      */
     public function hasPenalty()
     {
-        return strlen($this->getPenalty()) > 0;
+        if ($this->hasPenalty === null) {
+            $this->hasPenalty = strlen($this->getPenalty()) > 0;
+        }
+        return $this->hasPenalty;
     }
 
     /**
@@ -220,7 +276,10 @@ class Line
      */
     public function hasConePenalty()
     {
-        return (int) $this->getPenalty() > 0;
+        if ($this->hasConePenalty === null) {
+            $this->hasConePenalty = (int) $this->getPenalty() > 0;
+        }
+        return $this->hasConePenalty;
     }
 
     /**
@@ -229,7 +288,10 @@ class Line
      */
     public function isDnf()
     {
-        return $this->getPenalty() === 'DNF';
+        if ($this->isDnf === null) {
+            $this->isDnf = $this->getPenalty() === 'DNF';
+        }
+        return $this->isDnf;
     }
 
     /**
@@ -238,7 +300,10 @@ class Line
      */
     public function isRerun()
     {
-        return $this->getPenalty() === 'RRN';
+        if ($this->isRerun === null) {
+            $this->isRerun = $this->getPenalty() === 'RRN';
+        }
+        return $this->isRerun;
     }
 
     /**
@@ -247,7 +312,10 @@ class Line
      */
     public function getPenalty()
     {
-        return strtoupper($this->parse('penalty'));
+        if ($this->penalty === null) {
+            $this->penalty = strtoupper($this->parse('penalty'));
+        }
+        return $this->penalty;
     }
 
     /**
@@ -258,12 +326,15 @@ class Line
      */
     public function getDriverName()
     {
-        $driverName = $this->parse('driver');
-        if (Strings::isEmpty($driverName)) {
-            static $error = 'Invalid state file line is missing driver name.';
-            throw new LineException($error);
+        if ($this->driverName === null) {
+            $driverName = $this->parse('driver');
+            if (Strings::isEmpty($driverName)) {
+                static $error = 'Invalid state file line is missing driver name.';
+                throw new LineException($error);
+            }
+            $this->driverName = $driverName;
         }
-        return $driverName;
+        return $this->driverName;
     }
 
     /**
@@ -273,7 +344,10 @@ class Line
      */
     public function getCar()
     {
-        return $this->parse('car');
+        if ($this->car === null) {
+            $this->car = $this->parse('car');
+        }
+        return $this->car;
     }
 
     /**
@@ -283,7 +357,10 @@ class Line
      */
     public function getCarColor()
     {
-        return $this->parse('cc');
+        if ($this->carColor === null) {
+            $this->carColor = $this->parse('cc');
+        }
+        return $this->carColor;
     }
 
     /**
@@ -294,7 +371,10 @@ class Line
      */
     public function getTimePax()
     {
-        return strtoupper($this->parse('paxed'));
+        if ($this->timePax === null) {
+            $this->timePax = strtoupper($this->parse('paxed'));
+        }
+        return $this->timePax;
     }
 
     /**
@@ -303,11 +383,15 @@ class Line
      */
     public function getTimePaxForSort()
     {
-        if ($this->isClean() or $this->hasConePenalty()) {
-            return $this->getTimePax();
-        } else {
-            return PHP_INT_MAX;
+        if ($this->timePaxForSort === null) {
+            if ($this->isClean() or $this->hasConePenalty()) {
+                $timePaxForSort = $this->getTimePax();
+            } else {
+                $timePaxForSort = PHP_INT_MAX;
+            }
+            $this->timePaxForSort = $timePaxForSort;
         }
+        return $this->timePaxForSort;
     }
 
     /**
@@ -316,7 +400,10 @@ class Line
      */
     public function getTimestamp()
     {
-        return (int) $this->parse('tod');
+        if ($this->timestamp === null) {
+            $this->timestamp = (int) $this->parse('tod');
+        }
+        return $this->timestamp;
     }
 
     /**
@@ -349,14 +436,18 @@ class Line
      */
     public function isValid()
     {
-        try {
-            $this->getDriverClass();
-            $this->getDriverNumber();
-            $this->getDriverName();
-        } catch (LineException $le) {
-            return false;
+        if ($this->isValid === null) {
+            $isValid = false;
+            try {
+                $this->getDriverClass();
+                $this->getDriverNumber();
+                $this->getDriverName();
+                $isValid = true;
+            } catch (LineException $le) {
+            }
+            $this->isValid = $isValid;
         }
-        return true;
+        return $this->isValid;
     }
 
     /**
