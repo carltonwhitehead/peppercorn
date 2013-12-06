@@ -72,7 +72,7 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 0, 'DM', '14', '44.014');
         $provider[] = array($result, 1, 'STR', '0', '45.586');
         $provider[] = array($result, 2, 'SS', '1', '45.771');
-        $provider[] = array($result, 9, 'SS', '31', '47.155');
+        $provider[] = array($result, 9, 'SS', '31', '47.155'); // TODO: next-fastest-run tie-breaking
         $provider[] = array($result, 19, 'RTCSRT', '14', '48.401');
         $provider[] = array($result, 29, 'NOVDM', '14', '49.678');
         $provider[] = array($result, 39, 'RTHSRT', '0', '50.917');
