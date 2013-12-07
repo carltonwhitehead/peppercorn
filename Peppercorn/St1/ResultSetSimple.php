@@ -2,7 +2,7 @@
 namespace Peppercorn\St1;
 
 use Phava\Base\Preconditions;
-class ResultSetSimple
+class ResultSetSimple implements \Countable
 {
     /**
      * the File this object represents
@@ -27,7 +27,7 @@ class ResultSetSimple
     
     /**
      * get the File this ResultSetSimple represents
-     * @return File
+     * @return \Peppercorn\St1\File
      */
     public function getFile()
     {
@@ -43,10 +43,15 @@ class ResultSetSimple
         return count($this->results);
     }
     
+    public function count()
+    {
+        return $this->getCount();
+    }
+    
     /**
      * Get the Result at index $i from the 0-indexed backing array
      * @param int $i
-     * @return Result
+     * @return \Peppercorn\St1\Result
      */
     public function getIndex($i)
     {
@@ -57,10 +62,20 @@ class ResultSetSimple
      * Get the Result at 1-indexed $place
      * This is a convenience to encapsulate the 1-indexed nature of event result positions vs PHP's 0-indexed arrays
      * @param unknown $place
-     * @return Result
+     * @return \Peppercorn\St1\Result
      */
     public function getPlace($place)
     {
         return $this->results[$place - 1];
+    }
+    
+    /**
+     * Get the Line of the result at $i in the 0-indexed backing array
+     * @param int $i
+     * @return \Peppercorn\St1\Line
+     */
+    public function getLine($i)
+    {
+        return $this->results[$i]->getLine();
     }
 }

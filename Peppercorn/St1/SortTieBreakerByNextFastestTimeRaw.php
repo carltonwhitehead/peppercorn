@@ -6,11 +6,11 @@ class SortTieBreakerByNextFastestTimeRaw implements SortTieBreaker
     public function breakTie(Line $a, Line $b) {
         $aRuns = self::getRuns($a);
         $bRuns = self::getRuns($b);
-        $aCount = count($aRuns);
-        $bCount = count($bRuns);
+        $aCount = $aRuns->getCount();
+        $bCount = $bRuns->getCount();
         for ($i = 0; $i < $aCount && $i < $bCount; $i++) {
-            $aTimeRaw = $aRuns[$i]->getTimeRawForSort();
-            $bTimeRaw = $bRuns[$i]->getTimeRawForSort();
+            $aTimeRaw = $aRuns->getLine($i)->getTimeRawForSort();
+            $bTimeRaw = $bRuns->getLine($i)->getTimeRawForSort();
             if ($aTimeRaw < $bTimeRaw) {
                 return -1;
             } else if ($bTimeRaw < $aTimeRaw) {
@@ -21,6 +21,10 @@ class SortTieBreakerByNextFastestTimeRaw implements SortTieBreaker
         return strnatcmp($a->getDriverName(), $b->getDriverName());
     }
     
+    /**
+     * @param Line $line
+     * @return \Peppercorn\St1\ResultSetSimple
+     */
     private static function getRuns(Line $line) {
         $query = new Query($line->getFile());
         return $query->where(new WhereDriverIs($line->getDriverCategory(), $line->getDriverClass(), $line->getDriverNumber()))

@@ -148,11 +148,11 @@ class Query
      * Do not use this method with a Grouper set with groupBy(Grouper). It is OK to use with distinct(Grouper)
      * @return array Line objects
      */
-    public function &executeSimple()
+    public function executeSimple()
     {
         Preconditions::checkState($this->groupBy === null, 'executeSimple() cannot be used with groupBy()');
-        return $this->executeCommon();
-        // TODO: assemple ResultSetSimple
+        $lines = $this->executeCommon();
+        return new ResultSetSimple($this->file, $lines);
     }
     
     /**
@@ -182,7 +182,7 @@ class Query
         return $lines;
     }
     
-    public static function &rawResults(File $file)
+    public static function rawResults(File $file)
     {
         $query = new Query($file);
         $query

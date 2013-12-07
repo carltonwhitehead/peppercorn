@@ -8,6 +8,8 @@ use Peppercorn\St1\SortTimeRawAscending;
 use Peppercorn\St1\GroupByDriver;
 use Peppercorn\St1\LineException;
 use Peppercorn\St1\SortTieBreakerByNextFastestTimeRaw;
+use Peppercorn\St1\Result;
+use Peppercorn\St1\ResultSetSimple;
 class RawResultsTest extends ResultsTest
 {
     /**
@@ -19,10 +21,12 @@ class RawResultsTest extends ResultsTest
      * 
      * @dataProvider providerRawResults
      */
-    public function testRawResults(array $result, $resultIndex, $class, $number, $time)
+    public function testRawResults(ResultSetSimple $resultSet, $resultIndex, $class, $number, $time)
     {
-        $this->assertArrayHasKey($resultIndex, $result);
-        $line = $result[$resultIndex]; /* @var $line Line */
+        $this->assertGreaterThan($resultIndex, $resultSet->getCount());
+        $result = $resultSet->getIndex($resultIndex);
+        $this->assertEquals($resultIndex + 1, $result->getPlace());
+        $line = $resultSet->getLine($resultIndex);
         $this->assertEquals($class, $line->getDriverClassRaw());
         $this->assertEquals($number, $line->getDriverNumber());
         $this->assertEquals($time, $line->getTimeRawWithPenalty());

@@ -8,6 +8,7 @@ use Peppercorn\St1\Query;
 use Peppercorn\St1\WhereDriverIs;
 use Peppercorn\St1\Grouper;
 use Peppercorn\St1\GroupByDriver;
+use Peppercorn\St1\ResultSetSimple;
 
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
@@ -91,13 +92,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $this->assertOnResultFromDefaultQueryInAscendingOrder($file, $result);
     }
 
-    private function assertOnResultFromDefaultQueryInAscendingOrder(File $file, array $result)
+    private function assertOnResultFromDefaultQueryInAscendingOrder(File $file, $result)
     {
-        $this->assertInternalType('array', $result);
+        $this->assertInstanceOf('\\Peppercorn\\St1\\ResultSetSimple', $result); /* @var $result ResultSetSimple */
         $this->assertCount($file->getLineCount(), $result);
-        $result0 = $result[0]; /* @var $result0 Line */
+        $result0 = $result->getLine(0);
         $this->assertEquals("1", $result0->getRunNumber());
-        $result14 = $result[14]; /* @var $result15 Line */
+        $result14 = $result->getLine(14);
         $this->assertEquals("7", $result14->getRunNumber());
     }
 
@@ -124,11 +125,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     {
         $query->setTestLinesDescending();
         $result = $query->executeSimple();
-        $this->assertInternalType('array', $result);
+        $this->assertInstanceOf('\\Peppercorn\\St1\\ResultSetSimple', $result);
         $this->assertCount($file->getLineCount(), $result);
-        $result0 = $result[0]; /* @var $result0 Line */
+        $result0 = $result->getLine(0);
         $this->assertEquals("7", $result0->getRunNumber());
-        $result14 = $result[14]; /* @var $result15 Line */
+        $result14 = $result->getLine(14);
         $this->assertEquals("1", $result14->getRunNumber());
     }
 
@@ -141,7 +142,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     {
         $query->where(new WhereFalse());
         $result = $query->executeSimple();
-        $this->assertInternalType('array', $result);
+        $this->assertInstanceOf('\\Peppercorn\\St1\\ResultSetSimple', $result);
         $this->assertCount(0, $result);
     }
 
@@ -199,11 +200,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $query = new Query($file);
         $query->orderBy($sortByRawTimeDesc);
         $results = $query->executeSimple();
-        $this->assertCount($file->getLineCount(), $results);
-        $this->assertEquals(PHP_INT_MAX, $results[0]->getTimeRawForSort()); // DNF
-        $this->assertEquals(PHP_INT_MAX, $results[1]->getTimeRawForSort()); // DNF
-        $this->assertEquals(60.713, $results[13]->getTimeRawForSort()); // 60.713 clean
-        $this->assertEquals(59.970, $results[14]->getTimeRawForSort()); // 59.970 clean
+        $this->assertEquals($file->getLineCount(), $results->getCount());
+        $this->assertEquals(PHP_INT_MAX, $results->getLine(0)->getTimeRawForSort()); // DNF
+        $this->assertEquals(PHP_INT_MAX, $results->getLine(1)->getTimeRawForSort()); // DNF
+        $this->assertEquals(60.713, $results->getLine(13)->getTimeRawForSort()); // 60.713 clean
+        $this->assertEquals(59.970, $results->getLine(14)->getTimeRawForSort()); // 59.970 clean
     }
     
     /**
@@ -258,9 +259,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithDistinctDrivers(Query $query)
     {
         $actual = $query->executeSimple();
-        $this->assertCount(2, $actual);
-        $this->assertEquals('Zach Hill', $actual[0]->getDriverName());
-        $this->assertEquals('Carlton Whitehead', $actual[1]->getDriverName());
+        $this->assertEquals(2, $actual->getCount());
+        $this->assertEquals('Zach Hill', $actual->getLine(0)->getDriverName());
+        $this->assertEquals('Carlton Whitehead', $actual->getLine(1)->getDriverName());
     }
     
     public function providerExecuteWithDistinctDrivers()
