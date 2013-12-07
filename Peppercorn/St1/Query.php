@@ -198,6 +198,16 @@ class Query
         
         return $result;
     }
+    
+    public static function rawResults(File $file)
+    {
+        $query = new Query($file);
+        $query
+            ->orderBy(SortTimeRawAscending::getSort())
+            ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
+            ->distinct(new GroupByDriver());
+        return $query->execute();
+    }
 
     /**
      * Test each line in ascending order

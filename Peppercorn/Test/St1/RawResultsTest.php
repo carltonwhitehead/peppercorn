@@ -34,12 +34,7 @@ class RawResultsTest extends ResultsTest
         $results = array();
         $files = $this->getFiles();
         foreach ($files as $file /* @var $file File */) {
-            $query = new Query($file);
-            $query
-                ->orderBy(SortTimeRawAscending::getSort())
-                ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
-                ->distinct(new GroupByDriver());
-            $results[] = $query->execute();
+            $results[] = Query::rawResults($file);
         }
         // points1
         $result = $results[0];
