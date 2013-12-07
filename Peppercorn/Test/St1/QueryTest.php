@@ -87,7 +87,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithValidFileAndDefaultQuery(File $file, Query $query)
     {
-        $result = $query->execute();
+        $result = $query->executeSimple();
         $this->assertOnResultFromDefaultQueryInAscendingOrder($file, $result);
     }
 
@@ -110,7 +110,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithValidFileAndTestLinesAscendingQuery(File $file, Query $query)
     {
         $query->setTestLinesAscending();
-        $result = $query->execute();
+        $result = $query->executeSimple();
         $this->assertOnResultFromDefaultQueryInAscendingOrder($file, $result);
     }
 
@@ -123,7 +123,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithValidFileAndTestLinesDescendingQuery(File $file, Query $query)
     {
         $query->setTestLinesDescending();
-        $result = $query->execute();
+        $result = $query->executeSimple();
         $this->assertInternalType('array', $result);
         $this->assertCount($file->getLineCount(), $result);
         $result0 = $result[0]; /* @var $result0 Line */
@@ -140,7 +140,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
     public function testWhereTestReturnsFalse(Query $query)
     {
         $query->where(new WhereFalse());
-        $result = $query->execute();
+        $result = $query->executeSimple();
         $this->assertInternalType('array', $result);
         $this->assertCount(0, $result);
     }
@@ -198,7 +198,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $file = $this->getValidFile();
         $query = new Query($file);
         $query->orderBy($sortByRawTimeDesc);
-        $results = $query->execute();
+        $results = $query->executeSimple();
         $this->assertCount($file->getLineCount(), $results);
         $this->assertEquals(PHP_INT_MAX, $results[0]->getTimeRawForSort()); // DNF
         $this->assertEquals(PHP_INT_MAX, $results[1]->getTimeRawForSort()); // DNF
@@ -257,7 +257,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithDistinctDrivers(Query $query)
     {
-        $actual = $query->execute();
+        $actual = $query->executeSimple();
         $this->assertCount(2, $actual);
         $this->assertEquals('Zach Hill', $actual[0]->getDriverName());
         $this->assertEquals('Carlton Whitehead', $actual[1]->getDriverName());

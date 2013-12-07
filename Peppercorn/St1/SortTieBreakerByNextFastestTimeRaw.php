@@ -25,6 +25,6 @@ class SortTieBreakerByNextFastestTimeRaw implements SortTieBreaker
         $query = new Query($line->getFile());
         return $query->where(new WhereDriverIs($line->getDriverCategory(), $line->getDriverClass(), $line->getDriverNumber()))
             ->orderBy(SortTimeRawAscending::getSort())
-            ->execute();
+            ->executeSimple();
     }
 }

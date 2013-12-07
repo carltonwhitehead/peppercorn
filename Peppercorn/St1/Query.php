@@ -148,30 +148,11 @@ class Query
      * Do not use this method with a Grouper set with groupBy(Grouper). It is OK to use with distinct(Grouper)
      * @return array Line objects
      */
-    public function execute()
+    public function &executeSimple()
     {
-        Preconditions::checkState($this->groupBy === null, 'execute() cannot be used with groupBy()');
-        // filter results using Where tests
-        switch ($this->testLinesDirection) {
-        	case self::$TEST_WHERES_DESCENDING:
-        	    $result = $this->testLinesDescending();
-        	    break;
-        	case self::$TEST_WHERES_ASCENDING:
-        	default:
-        	    $result = $this->testLinesAscending();
-        	    break;
-        }
-        // order results by sort
-        if ($this->sort !== null) {
-            usort($result, $this->sort);
-        }
-        if ($this->distinct !== null) {
-            $result = $this->filterDistinct($result);
-        }
-        if ($this->sortTieBreaker != null) {
-            $result = $this->checkForAndBreakTies($result);
-        }
-        return $result;
+        Preconditions::checkState($this->groupBy === null, 'executeSimple() cannot be used with groupBy()');
+        return $this->executeCommon();
+        // TODO: assemple ResultSetSimple
     }
     
     /**
@@ -182,16 +163,9 @@ class Query
     {
         Preconditions::checkState($this->groupBy !== null, 'must call groupBy(Grouper) before calling executeGrouped()');
         
-        // capture and clear the grouper so that execute() can be called safely
-        $groupBy = $this->groupBy;
-        $this->groupBy = null;
+        $lines = $this->executeCommon();
         
-        $result = $this->execute();
-        
-        // pay no attention to that man behind the curtain
-        $this->groupBy = $groupBy;
-        
-        $result = $this->groupLines($result);
+        $result = $this->groupLines($lines);
         
         // TODO: support for aggregate processing of Line objects in group (ie sum of cones, etc)
         // TODO: support for having()
@@ -199,21 +173,41 @@ class Query
         return $result;
     }
     
-    public static function rawResults(File $file)
+    private function &executeCommon()
+    {
+        $lines = $this->testLines();
+        $this->sort($lines);
+        $lines = $this->filterDistinct($lines);
+        $this->breakTies($lines);
+        return $lines;
+    }
+    
+    public static function &rawResults(File $file)
     {
         $query = new Query($file);
         $query
             ->orderBy(SortTimeRawAscending::getSort())
             ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
             ->distinct(new GroupByDriver());
-        return $query->execute();
+        return $query->executeSimple();
+    }
+    
+    private function &testLines()
+    {
+        switch ($this->testLinesDirection) {
+        	case self::$TEST_WHERES_DESCENDING:
+        	    return $this->testLinesDescending();
+        	case self::$TEST_WHERES_ASCENDING:
+        	default:
+        	    return $this->testLinesAscending();
+        }
     }
 
     /**
      * Test each line in ascending order
      * @return array only Line objects which passed all Where tests
      */
-    private function testLinesAscending()
+    private function &testLinesAscending()
     {
         $result = array();
         for ($i = 0; $i < $this->file->getLineCount(); $i++) {
@@ -234,7 +228,7 @@ class Query
      * Test each line in descending order
      * @return array only Line objects which passed all Where tests
      */
-    private function testLinesDescending()
+    private function &testLinesDescending()
     {
         $result = array();
         for ($i = $this->file->getLineCount() - 1; $i >= 0; $i--) {
@@ -269,21 +263,32 @@ class Query
         return true;
     }
     
+    private function sort(array &$lines)
+    {
+        if ($this->sort !== null) {
+            usort($lines, $this->sort);
+        }
+    }
+    
     /**
      * Filter the Line objects into an array containing only distinct Line objects according to the $distinct Grouper.
      * @param array $lines
      */
-    private function filterDistinct(array $lines)
+    private function &filterDistinct(array &$lines)
     {
-        Preconditions::checkState($this->distinct instanceof Grouper);
-        $result = array();
-        foreach ($lines as /* @var $line Line */ $line) {
-            $key = $this->distinct->getGroupKey($line);
-            if (!array_key_exists($key, $result)) {
-                $result[$key] = $line;
+        if ($this->distinct !== null) {
+            $result = array();
+            foreach ($lines as /* @var $line Line */ $line) {
+                $key = $this->distinct->getGroupKey($line);
+                if (!array_key_exists($key, $result)) {
+                    $result[$key] = $line;
+                }
             }
+            $result = array_values($result);
+        } else {
+            $result = $lines;
         }
-        return array_values($result);
+        return $result;
     }
     
     /**
@@ -293,7 +298,7 @@ class Query
      */
     private function groupLines(array $lines)
     {
-        Preconditions::checkState($this->groupBy instanceof Grouper);
+        Preconditions::checkState($this->groupBy !== null);
         $result = array();
         foreach ($lines as /* @var $line Line */ $line) {
             $key = $this->groupBy->getGroupKey($line);
@@ -305,32 +310,31 @@ class Query
         return array_values($result);
     }
     
-    private function checkForAndBreakTies(array $lines)
+    private function breakTies(array &$lines)
     {
-        Preconditions::checkState($this->sort !== null, '$this->sort must be an instance of a callable');
-        Preconditions::checkState($this->sortTieBreaker !== null, '$this->sortTieBreaker must be an instance of a SortTieBreaker');
-        $stopAtLine = count($lines) - 1;
-        $noTiesBroken = false;
-        while ($noTiesBroken === false) {
-            $tiesBroken = false;
-            for ($i = 0; $i < $stopAtLine; $i++) {
-                $a = $lines[$i];
-                $b = $lines[$i + 1];
-                $sort = $this->sort;
-                if ($sort($a, $b) === 0) {
-                    $tieBreak = $this->sortTieBreaker->breakTie($a, $b);
-                    if ($tieBreak > 0) {
-                        $lines[$i] = $b;
-                        $lines[$i + 1] = $a;
-                        $tiesBroken = true;
+        if ($this->sortTieBreaker !== null) {
+            $stopAtLine = count($lines) - 1;
+            $noTiesBroken = false;
+            while ($noTiesBroken === false) {
+                $tiesBroken = false;
+                for ($i = 0; $i < $stopAtLine; $i++) {
+                    $a = $lines[$i];
+                    $b = $lines[$i + 1];
+                    $sort = $this->sort;
+                    if ($sort($a, $b) === 0) {
+                        $tieBreak = $this->sortTieBreaker->breakTie($a, $b);
+                        if ($tieBreak > 0) {
+                            $lines[$i] = $b;
+                            $lines[$i + 1] = $a;
+                            $tiesBroken = true;
+                        }
                     }
                 }
-            }
-            if ($tiesBroken === false) {
-                $noTiesBroken = true;
+                if ($tiesBroken === false) {
+                    $noTiesBroken = true;
+                }
             }
         }
-        return $lines;
     }
 
 }
