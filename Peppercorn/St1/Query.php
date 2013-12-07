@@ -169,7 +169,7 @@ class Query
             $result = $this->filterDistinct($result);
         }
         if ($this->sortTieBreaker != null) {
-            $this->checkForAndBreakTies($result);
+            $result = $this->checkForAndBreakTies($result);
         }
         return $result;
     }

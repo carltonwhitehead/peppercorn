@@ -64,6 +64,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 39, 'RTCSRT', '14', '50.610');
         $provider[] = array($result, 49, 'RTESPRT', '89', '51.606');
         $provider[] = array($result, 59, 'NOVCS', '12', '53.191');
+        $provider[] = array($result, 62, 'NOVCSP', '64', '53.681');
+        $provider[] = array($result, 63, 'RTCSRT', '4', '53.681');
         $provider[] = array($result, 69, 'RTDSRT', '98', '54.291');
         $provider[] = array($result, 79, 'NOVCS', '0', '55.530');
         $provider[] = array($result, 89, 'STC', '47', '57.422');
@@ -126,6 +128,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 49, 'RTHS', '0', '36.597');
         $provider[] = array($result, 59, 'SM', '90', '37.676');
         $provider[] = array($result, 69, 'NOVSM', '38', '39.054');
+        $provider[] = array($result, 76, 'NOVES', '22', '40.532');
+        $provider[] = array($result, 77, 'ES', '5', '40.532');
         $provider[] = array($result, 79, 'ES', '77', '40.935');
         $provider[] = array($result, 84, 'NOVAS', '7', '42.549');
         $provider[] = array($result, 85, 'NOVSM', '15', '47.804');
@@ -177,6 +181,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 9, 'DS', '78', '62.904');
         $provider[] = array($result, 19, 'STU', '7', '64.632');
         $provider[] = array($result, 29, 'OFBSP', '8', '68.425');
+        $provider[] = array($result, 34, 'NOVCSP', '7', '70.002');
+        $provider[] = array($result, 35, 'NOVFS', '10', '70.002');
         $provider[] = array($result, 39, 'NOVCS', '19', '71.487');
         $provider[] = array($result, 49, 'XP', '1', '79.606');
         $provider[] = array($result, 50, 'HS', '4', '79.782');
