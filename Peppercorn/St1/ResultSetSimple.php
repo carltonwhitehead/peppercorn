@@ -51,7 +51,7 @@ class ResultSetSimple implements \Countable
     /**
      * Get the Result at index $i from the 0-indexed backing array
      * @param int $i
-     * @return \Peppercorn\St1\Result
+     * @return Result
      */
     public function getIndex($i)
     {
@@ -61,8 +61,8 @@ class ResultSetSimple implements \Countable
     /**
      * Get the Result at 1-indexed $place
      * This is a convenience to encapsulate the 1-indexed nature of event result positions vs PHP's 0-indexed arrays
-     * @param unknown $place
-     * @return \Peppercorn\St1\Result
+     * @param int $place
+     * @return Result
      */
     public function getPlace($place)
     {
@@ -72,7 +72,7 @@ class ResultSetSimple implements \Countable
     /**
      * Get the Line of the result at $i in the 0-indexed backing array
      * @param int $i
-     * @return \Peppercorn\St1\Line
+     * @return Line
      */
     public function getLine($i)
     {

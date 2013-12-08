@@ -22,6 +22,7 @@ class Result
     }
     
     /**
+     * get the Line represented by this Result
      * @return \Peppercorn\St1\Line
      */
     public function getLine()

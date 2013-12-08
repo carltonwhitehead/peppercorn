@@ -182,12 +182,32 @@ class Query
         return $lines;
     }
     
+    /**
+     * Query raw results from the passed file
+     * @param File $file
+     * @return \Peppercorn\St1\ResultSetSimple
+     */
     public static function rawResults(File $file)
     {
         $query = new Query($file);
         $query
             ->orderBy(SortTimeRawAscending::getSort())
             ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
+            ->distinct(new GroupByDriver());
+        return $query->executeSimple();
+    }
+    
+    /**
+     * Query pax results from the passed file
+     * @param File $file
+     * @return \Peppercorn\St1\ResultSetSimple
+     */
+    public static function paxResults(File $file)
+    {
+        $query = new Query($file);
+        $query
+            ->orderBy(SortTimePaxAscending::getSort())
+            ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimePax())
             ->distinct(new GroupByDriver());
         return $query->executeSimple();
     }

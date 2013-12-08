@@ -4,10 +4,7 @@ namespace Peppercorn\Test\St1;
 use Peppercorn\St1\File;
 use Peppercorn\St1\Line;
 use Peppercorn\St1\Query;
-use Peppercorn\St1\SortTimeRawAscending;
-use Peppercorn\St1\GroupByDriver;
 use Peppercorn\St1\LineException;
-use Peppercorn\St1\SortTieBreakerByNextFastestTimeRaw;
 use Peppercorn\St1\Result;
 use Peppercorn\St1\ResultSetSimple;
 class RawResultsTest extends ResultsTest
