@@ -376,12 +376,17 @@ class Line
      * Get the PAX time of the run.
      * AXware has already factored in cone penalty seconds, if any
      *
+     * @throws LineException if no pax time is found
      * @return string
      */
     public function getTimePax()
     {
         if ($this->timePax === null) {
-            $this->timePax = strtoupper($this->parse('paxed'));
+            $timePax = strtoupper($this->parse('paxed'));
+            if (Strings::isEmpty($timePax)) {
+                throw new LineException('Line is invalid without pax time');
+            }
+            $this->timePax = $timePax;
         }
         return $this->timePax;
     }
@@ -451,6 +456,7 @@ class Line
                 $this->getDriverClass();
                 $this->getDriverNumber();
                 $this->getDriverName();
+                $this->getTimePax();
                 $isValid = true;
             } catch (LineException $le) {
             }

@@ -298,11 +298,8 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTimePaxWithBadContent(Line $line)
     {
-        try {
-            $line->getTimePax();
-        } catch (Exception $e) {
-            $this->fail('Should no longer throw on getTimePax()');
-        }
+        $this->setExpectedException('\\Peppercorn\\St1\\LineException');
+        $line->getTimePax();
     }
 
     public function providerGetTimePaxWithBadContent()
