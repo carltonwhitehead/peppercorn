@@ -102,6 +102,27 @@ class PaxResultsTest extends ResultsTest
         $provider[] = array($result, 86, 'NOVFP', '61', '48.861');
         $provider[] = array($result, 87, 'STC', '87', '49.154');
         $provider[] = array($result, 88, 'NOVDM', '44', '49.192');
+        // points4
+        $result = $results[3];
+        $provider[] = array($result, 0, 'XSTU', '37', '32.219');
+        $provider[] = array($result, 1, 'STR', '3', '32.446');
+        $provider[] = array($result, 2, 'XSTC', '59', '32.528');
+        $provider[] = array($result, 3, 'STR', '0', '32.620');
+        $provider[] = array($result, 4, 'RTCS', '5', '32.633');
+        $provider[] = array($result, 5, 'STR', '80', '32.688');
+        $provider[] = array($result, 6, 'STR', '4', '32.799');
+        $provider[] = array($result, 7, 'STX', '44', '32.809');
+        $provider[] = array($result, 8, 'SS', '1', '32.834');
+        $provider[] = array($result, 9, 'STR', '1', '33.296');
+        $provider[] = array($result, 19, 'XSS', '166', '34.072');
+        $provider[] = array($result, 29, 'RTDSP', '26', '34.924');
+        $provider[] = array($result, 39, 'RTBSP', '28', '35.279');
+        $provider[] = array($result, 49, 'BSP', '3', '36.458');
+        $provider[] = array($result, 59, 'NOVSTR', '33', '37.036');
+        $provider[] = array($result, 69, 'SSM', '6', '38.249');
+        $provider[] = array($result, 73, 'NOVHS', '19', '39.922');
+        $provider[] = array($result, 74, 'ESP', '8', '40.732');
+        $provider[] = array($result, 75, 'ES', '77', '41.053');
         
         return $provider;
     }
