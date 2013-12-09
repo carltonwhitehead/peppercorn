@@ -185,6 +185,35 @@ class PaxResultsTest extends ResultsTest
         $provider[] = array($result, 71, 'NOVSM', '76', '37.105');
         $provider[] = array($result, 72, 'NOVDSP', '6', '37.778');
         $provider[] = array($result, 73, 'DS', '5', 'DNF');
+        // points 8
+        $result = $results[7];
+        $provider[] = array($result, 0, 'XDS', '97', '36.598');
+        $provider[] = array($result, 1, 'XDS', '78', '38.035');
+        $provider[] = array($result, 2, 'XASP', '9', '38.063');
+        $provider[] = array($result, 3, 'XSTS', '28', '38.076');
+        $provider[] = array($result, 4, 'STR', '3', '38.077');
+        $provider[] = array($result, 5, 'STR', '180', '38.484');
+        $provider[] = array($result, 6, 'STR', '80', '38.557');
+        $provider[] = array($result, 7, 'STR', '8', '38.630');
+        $provider[] = array($result, 8, 'STR', '44', '38.635');
+        $provider[] = array($result, 9, 'STR', '144', '38.698');
+        $provider[] = array($result, 18, 'RTCS', '79', '39.312');
+        $provider[] = array($result, 19, 'RTCS', '1', '39.312');
+        $provider[] = array($result, 29, 'RTCS', '73', '39.854');
+        $provider[] = array($result, 39, 'SMF', '20', '40.432');
+        $provider[] = array($result, 49, 'RTCS', '86', '41.120');
+        $provider[] = array($result, 59, 'STF', '1', '41.952');
+        $provider[] = array($result, 69, 'NOVES', '2', '42.584');
+        $provider[] = array($result, 79, 'STR', '1', '43.050');
+        $provider[] = array($result, 89, 'NOVBS', '94', '44.081');
+        $provider[] = array($result, 99, 'HS', '86', '44.925');
+        $provider[] = array($result, 109, 'STX', '2', '46.168');
+        $provider[] = array($result, 119, 'NOVFS', '91', '47.416');
+        $provider[] = array($result, 129, 'LADSTR', '88', '50.677');
+        $provider[] = array($result, 133, 'NOVBS', '121', '52.786');
+        $provider[] = array($result, 134, 'NOVCS', '29', '53.326');
+        $provider[] = array($result, 135, 'STR', '24', 'DNF');
+        $provider[] = array($result, 136, 'LADDSP', '1', 'DNF');
         
         return $provider;
     }

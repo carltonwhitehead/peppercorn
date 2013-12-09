@@ -168,8 +168,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 129, 'NOVFS', '44', '61.017');
         $provider[] = array($result, 133, 'NOVBS', '121', '62.469');
         $provider[] = array($result, 134, 'NOVCS', '29', '63.940');
-        $provider[] = array($result, 135, 'LADDSP', '1', Line::getPenaltyDnf());
-        $provider[] = array($result, 136, 'STR', '24', Line::getPenaltyDnf());
+        $provider[] = array($result, 135, 'STR', '24', Line::getPenaltyDnf());
+        $provider[] = array($result, 136, 'LADDSP', '1', Line::getPenaltyDnf());
         // points9
         $result = $results[8];
         $provider[] = array($result, 0, 'XKM', '50', '51.762');
