@@ -10,7 +10,12 @@ use Phava\Base\Preconditions;
  */
 class Line
 {
-
+    
+    protected static $PENALTY_DNF;
+    protected static $PENALTY_RRN;
+    protected static $PENALTY_DSQ;
+    protected static $PENALTY_UNKNOWN;
+    
     /**
      * the parent st1 file
      *
@@ -38,6 +43,7 @@ class Line
     private $hasPenalty;
     private $hasConePenalty;
     private $isDnf;
+    private $isDsq;
     private $isRerun;
     private $penalty;
     private $driverName;
@@ -218,18 +224,21 @@ class Line
     }
 
     /**
-     * Gets the raw time of the run with either cone penalty, or PHP_INT_MAX if the run is a DNF
+     * Gets the raw time of the run with penalty applied, if any
      * @return string
      */
     public function getTimeRawWithPenalty()
     {
         if ($this->timeRawWithPenalty === null) {
-            if (!$this->isDnf()) {
-                $timeRawWithPenalty = (string) $this->applyConePenaltyTo($this->getTimeRaw());
+            if ($this->isDnf()) {
+                $this->timeRawWithPenalty = static::$PENALTY_DNF;
+            } else if ($this->isRerun()) {
+                $this->timeRawWithPenalty = static::$PENALTY_RRN;
+            } else if ($this->isDsq()) {
+                $this->timeRawWithPenalty = static::$PENALTY_DSQ;
             } else {
-                $timeRawWithPenalty = PHP_INT_MAX;
+                $this->timeRawWithPenalty = (string) $this->applyConePenaltyTo($this->getTimeRaw());
             }
-            $this->timeRawWithPenalty = $timeRawWithPenalty;
         }
         return $this->timeRawWithPenalty;
     }
@@ -247,6 +256,12 @@ class Line
                 and Strings::isNotEmpty($this->getTimePax())
                 and is_numeric($this->getTimeRaw())) {
                 $timeRawForSort = $this->getTimeRawWithPenalty();
+            } else if ($this->isDnf()) {
+                $timeRawForSort = static::$PENALTY_DNF;
+            } else if ($this->isRerun()) {
+                $timeRawForSort = static::$PENALTY_RRN;
+            } else if ($this->isDsq()) {
+                $timeRawForSort = static::$PENALTY_DSQ;
             } else {
                 $timeRawForSort = PHP_INT_MAX;
             }
@@ -301,6 +316,14 @@ class Line
             $this->isDnf = $this->getPenalty() === 'DNF';
         }
         return $this->isDnf;
+    }
+    
+    public function isDsq()
+    {
+        if ($this->isDsq === null) {
+            $this->isDsq = $this->getPenalty() === 'DSQ';
+        }
+        return $this->isDsq;
     }
 
     /**
@@ -399,11 +422,16 @@ class Line
     {
         if ($this->timePaxForSort === null) {
             if ($this->isClean() or $this->hasConePenalty()) {
-                $timePaxForSort = $this->getTimePax();
+                $this->timePaxForSort = $this->getTimePax();
+            } else if ($this->isDnf()) {
+                $this->timePaxForSort = static::$PENALTY_DNF;
+            } else if ($this->isRerun()) {
+                $this->timePaxForSort = static::$PENALTY_RRN;
+            } else if ($this->isDsq()) {
+                $this->timePaxForSort = static::$PENALTY_DSQ;
             } else {
-                $timePaxForSort = PHP_INT_MAX;
+                $this->timePaxForSort = PHP_INT_MAX;
             }
-            $this->timePaxForSort = $timePaxForSort;
         }
         return $this->timePaxForSort;
     }
@@ -442,6 +470,26 @@ class Line
     public function getDiffFromFirst()
     {
         return $this->parse('diff1');
+    }
+    
+    public static function getPenaltyDnf()
+    {
+        return self::$PENALTY_DNF;
+    }
+    
+    public static function getPenaltyRrn()
+    {
+        return self::$PENALTY_RRN;
+    }
+    
+    public static function getPenaltyDsq()
+    {
+        return self::$PENALTY_DSQ;
+    }
+    
+    public static function getPenaltyUnknown()
+    {
+        return self::$PENALTY_UNKNOWN;
     }
     
     /**
@@ -508,3 +556,15 @@ class Line
         return $this->file->getSecondsPerCone();
     }
 }
+class LineStatic extends Line
+{
+    public function __construct() { throw new \Exception(); }
+    public static function init()
+    {
+        static::$PENALTY_DNF = PHP_INT_MAX - 1000;
+        static::$PENALTY_RRN = PHP_INT_MAX - 900;
+        static::$PENALTY_DSQ = PHP_INT_MAX - 800;
+        static::$PENALTY_UNKNOWN = PHP_INT_MAX;
+    }
+}
+LineStatic::init();

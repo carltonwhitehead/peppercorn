@@ -433,7 +433,6 @@ class LineTest extends \PHPUnit_Framework_TestCase
     public function testGetTimeRawWithPenalty(Line $line, $expected)
     {
         $actual = $line->getTimeRawWithPenalty();
-        $this->assertTrue(is_string($actual) || $actual === PHP_INT_MAX, 'Line->getTimeRawWithPenalty must return either a string or PHP_INT_MAX');
         $this->assertTrue($actual === $expected);
     }
 
@@ -443,8 +442,8 @@ class LineTest extends \PHPUnit_Framework_TestCase
         return array(
         	array($file->getLine(0), '54.444'), // has +1
             array($file->getLine(1), '51.490'), // no penalty, time with trailing zeros
-            array($file->getLine(8), PHP_INT_MAX), // has DNF
-            array($file->getLine(16), '67.648'), // has RRN
+            array($file->getLine(8), Line::getPenaltyDnf()), // has DNF
+            array($file->getLine(16), Line::getPenaltyRrn()), // has RRN
             array($file->getLine(19), '52.700') // has +1, time with trailing zeros
         );
     }
@@ -540,8 +539,8 @@ class LineTest extends \PHPUnit_Framework_TestCase
         return array(
             array($file->getLine(0), 54.444), // 52.444 +1
             array($file->getLine(1), 51.490), // 51.490 clean
-            array($file->getLine(8), PHP_INT_MAX), // 42.432 +DNF
-            array($file->getLine(16), PHP_INT_MAX), // 67.648 +RRN
+            array($file->getLine(8), Line::getPenaltyDnf()), // 42.432 +DNF
+            array($file->getLine(16), Line::getPenaltyRrn()), // 67.648 +RRN
         );
     }
 
@@ -564,9 +563,36 @@ class LineTest extends \PHPUnit_Framework_TestCase
         return array(
         	array($file->getLine(0), 45.678), // 52.444 raw, paxed, +1
             array($file->getLine(1), 43.200), // 51.490 raw, paxed, clean
-            array($file->getLine(8), PHP_INT_MAX), // 42.432 raw, paxed, DNF
-            array($file->getLine(16), PHP_INT_MAX) // 67.648 raw, paxed, RRN
+            array($file->getLine(8), Line::getPenaltyDnf()), // 42.432 raw, paxed, DNF
+            array($file->getLine(16), Line::getPenaltyRrn()) // 67.648 raw, paxed, RRN
         );
+    }
+    
+    public function testGetPenaltyDnf()
+    {
+        $actual = Line::getPenaltyDnf();
+        $this->assertGreaterThan(0, $actual);
+        $this->assertLessThan(Line::getPenaltyRrn(), $actual);
+    }
+    
+    public function testGetPenaltyRrn()
+    {
+        $actual = Line::getPenaltyRrn();
+        $this->assertGreaterThan(Line::getPenaltyDnf(), $actual);
+        $this->assertLessThan(Line::getPenaltyDsq(), $actual);
+    }
+    
+    public function testGetPenaltyDsq()
+    {
+        $actual = Line::getPenaltyDsq();
+        $this->assertGreaterThan(Line::getPenaltyRrn(), $actual);
+        $this->assertLessThan(Line::getPenaltyUnknown(), $actual);
+    }
+    
+    public function testGetPenaltyUnknown()
+    {
+        $actual = Line::getPenaltyUnknown();
+        $this->assertEquals(PHP_INT_MAX, $actual);
     }
 
     /**

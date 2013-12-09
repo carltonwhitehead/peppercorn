@@ -201,8 +201,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $query->orderBy($sortByRawTimeDesc);
         $results = $query->executeSimple();
         $this->assertEquals($file->getLineCount(), $results->getCount());
-        $this->assertEquals(PHP_INT_MAX, $results->getLine(0)->getTimeRawForSort()); // DNF
-        $this->assertEquals(PHP_INT_MAX, $results->getLine(1)->getTimeRawForSort()); // DNF
+        $this->assertEquals(Line::getPenaltyRrn(), $results->getLine(0)->getTimeRawForSort()); // DNF
+        $this->assertEquals(Line::getPenaltyDnf(), $results->getLine(1)->getTimeRawForSort()); // DNF
         $this->assertEquals(60.713, $results->getLine(13)->getTimeRawForSort()); // 60.713 clean
         $this->assertEquals(59.970, $results->getLine(14)->getTimeRawForSort()); // 59.970 clean
     }

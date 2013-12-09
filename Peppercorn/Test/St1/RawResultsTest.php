@@ -67,6 +67,7 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 89, 'STC', '47', '57.422');
         $provider[] = array($result, 92, 'SM', '10', '60.361');
         $provider[] = array($result, 93, 'SM', '9', '61.950');
+        $provider[] = array($result, 94, 'XSTS', '15', Line::getPenaltyDsq());
         // points3
         $result = $results[2];
         $provider[] = array($result, 0, 'DM', '14', '44.014');
@@ -144,7 +145,7 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 69, 'STC', '87', '41.459');
         $provider[] = array($result, 71, 'NOVSM', '76', '42.797');
         $provider[] = array($result, 72, 'NOVDSP', '6', '44.185');
-        $provider[] = array($result, 73, 'DS', '5', PHP_INT_MAX);
+        $provider[] = array($result, 73, 'DS', '5', Line::getPenaltyDnf());
         // points8
         $result = $results[7];
         $provider[] = array($result, 0, 'XASP', '9', '43.953');
@@ -167,8 +168,8 @@ class RawResultsTest extends ResultsTest
         $provider[] = array($result, 129, 'NOVFS', '44', '61.017');
         $provider[] = array($result, 133, 'NOVBS', '121', '62.469');
         $provider[] = array($result, 134, 'NOVCS', '29', '63.940');
-        $provider[] = array($result, 135, 'LADDSP', '1', PHP_INT_MAX);
-        $provider[] = array($result, 136, 'STR', '24', PHP_INT_MAX);
+        $provider[] = array($result, 135, 'LADDSP', '1', Line::getPenaltyDnf());
+        $provider[] = array($result, 136, 'STR', '24', Line::getPenaltyDnf());
         // points9
         $result = $results[8];
         $provider[] = array($result, 0, 'XKM', '50', '51.762');
