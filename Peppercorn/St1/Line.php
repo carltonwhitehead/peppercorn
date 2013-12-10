@@ -512,6 +512,19 @@ class Line
         }
         return $this->isValid;
     }
+    
+    /**
+     * Find whether the getTime(Raw|Pax)ForSort() methods will return an arbitrary time.
+     * For example, static::$PENALTY_DNF, static::$PENALTY_RRN, etc
+     * @return boolean
+     */
+    public function hasArbitrarySortTime()
+    {
+        return $this->isDnf() 
+            or $this->isRerun() 
+            or $this->isDsq() 
+            or !$this->hasRunNumber();
+    }
 
     /**
      * apply the event's cone penalty to the time

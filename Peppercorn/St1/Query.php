@@ -41,6 +41,12 @@ class Query
     private $sortTieBreaker;
     
     /**
+     * Whether or not to report ties in the ResultSet
+     * @var boolean
+     */
+    private $reportTies;
+    
+    /**
      * A Grouper to use for narrowing the query to distinct Lines.
      * @var Grouper
      */
@@ -110,6 +116,18 @@ class Query
     public function breakSimpleQueryTiesWith(SortTieBreaker $sortTieBreaker)
     {
         $this->sortTieBreaker = $sortTieBreaker;
+        return $this;
+    }
+    
+    /**
+     * Specify whether ties should be reported
+     * @param boolean $reportTies
+     * @return \Peppercorn\St1\Query
+     */
+    public function reportTies($reportTies)
+    {
+        Preconditions::checkArgument(is_bool($reportTies), '$reportTies must be a boolean');
+        $this->reportTies = $reportTies;
         return $this;
     }
     
@@ -193,6 +211,7 @@ class Query
         $query
             ->orderBy(SortTimeRawAscending::getSort())
             ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
+            ->reportTies(true)
             ->distinct(new GroupByDriver());
         return $query->executeSimple();
     }
@@ -208,6 +227,7 @@ class Query
         $query
             ->orderBy(SortTimePaxAscending::getSort())
             ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimePax())
+            ->reportTies(true)
             ->distinct(new GroupByDriver());
         return $query->executeSimple();
     }
@@ -330,31 +350,17 @@ class Query
         return array_values($result);
     }
     
+    /**
+     * 
+     * @param array $lines
+     * @return array an array of TieBreak objects indicating any ties broken
+     */
     private function breakTies(array &$lines)
     {
-        if ($this->sortTieBreaker !== null) {
-            $stopAtLine = count($lines) - 1;
-            $noTiesBroken = false;
-            while ($noTiesBroken === false) {
-                $tiesBroken = false;
-                for ($i = 0; $i < $stopAtLine; $i++) {
-                    $a = $lines[$i];
-                    $b = $lines[$i + 1];
-                    $sort = $this->sort;
-                    if ($sort($a, $b) === 0) {
-                        $tieBreak = $this->sortTieBreaker->breakTie($a, $b);
-                        if ($tieBreak > 0) {
-                            $lines[$i] = $b;
-                            $lines[$i + 1] = $a;
-                            $tiesBroken = true;
-                        }
-                    }
-                }
-                if ($tiesBroken === false) {
-                    $noTiesBroken = true;
-                }
-            }
+        if ($this->sortTieBreaker === null) {
+            return null;
         }
+        return $this->sortTieBreaker->findAndBreakTies($this->sort, $lines);
     }
 
 }
