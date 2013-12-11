@@ -38,13 +38,7 @@ class Query
      * A SortTieBreaker to use for breaking ties in the results of a simple query
      * @var SortTieBreaker
      */
-    private $sortTieBreaker;
-    
-    /**
-     * Whether or not to report ties in the ResultSet
-     * @var boolean
-     */
-    private $reportTies;
+    private $tieBreaker;
     
     /**
      * A Grouper to use for narrowing the query to distinct Lines.
@@ -113,21 +107,9 @@ class Query
      * @param SortTieBreaker $sortTieBreaker
      * @return \Peppercorn\St1\Query
      */
-    public function breakSimpleQueryTiesWith(SortTieBreaker $sortTieBreaker)
+    public function breakTiesWith(SortTieBreaker $sortTieBreaker)
     {
-        $this->sortTieBreaker = $sortTieBreaker;
-        return $this;
-    }
-    
-    /**
-     * Specify whether ties should be reported
-     * @param boolean $reportTies
-     * @return \Peppercorn\St1\Query
-     */
-    public function reportTies($reportTies)
-    {
-        Preconditions::checkArgument(is_bool($reportTies), '$reportTies must be a boolean');
-        $this->reportTies = $reportTies;
+        $this->tieBreaker = $sortTieBreaker;
         return $this;
     }
     
@@ -210,8 +192,7 @@ class Query
         $query = new Query($file);
         $query
             ->orderBy(SortTimeRawAscending::getSort())
-            ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimeRaw())
-            ->reportTies(true)
+            ->breakTiesWith(new SortTieBreakerByNextFastestTimeRaw())
             ->distinct(new GroupByDriver());
         return $query->executeSimple();
     }
@@ -226,8 +207,7 @@ class Query
         $query = new Query($file);
         $query
             ->orderBy(SortTimePaxAscending::getSort())
-            ->breakSimpleQueryTiesWith(new SortTieBreakerByNextFastestTimePax())
-            ->reportTies(true)
+            ->breakTiesWith(new SortTieBreakerByNextFastestTimePax())
             ->distinct(new GroupByDriver());
         return $query->executeSimple();
     }
@@ -357,10 +337,10 @@ class Query
      */
     private function breakTies(array &$lines)
     {
-        if ($this->sortTieBreaker === null) {
+        if ($this->tieBreaker === null) {
             return null;
         }
-        return $this->sortTieBreaker->findAndBreakTies($this->sort, $lines);
+        return $this->tieBreaker->findAndBreakTies($this->sort, $lines);
     }
 
 }
