@@ -2,6 +2,10 @@
 namespace Peppercorn\St1;
 
 use Phava\Base\Preconditions;
+
+/**
+ * @todo Refactor $lines and $results to private properties instead of passing references to methods
+ */
 class Query
 {
 
@@ -51,6 +55,12 @@ class Query
      * @var Grouper
      */
     private $groupBy;
+    
+    /**
+     * Whether or not the Query has been executed already
+     * @var boolean
+     */
+    private $executed = false;
 
     public function __construct(File $file)
     {
@@ -169,12 +179,14 @@ class Query
         
         // TODO: support for aggregate processing of Line objects in group (ie sum of cones, etc)
         // TODO: support for having()
-        
+        $this->executed = true;
         return $result;
     }
     
     private function &executeCommon()
     {
+        Preconditions::checkState(!$this->executed, 'A Query can only be executed once');
+        $this->executed = true;
         $lines = $this->testLines();
         $this->sort($lines);
         $lines = $this->filterDistinct($lines);
