@@ -167,7 +167,7 @@ class Query
     
     /**
      * Execute a grouped query
-     * @return array a multidimensional array of arrays of Line objects grouped by the groupBy Grouper
+     * @return ResultSetGrouped
      */
     public function executeGrouped()
     {
@@ -179,8 +179,13 @@ class Query
         
         // TODO: support for aggregate processing of Line objects in group (ie sum of cones, etc)
         // TODO: support for having()
-        $this->executed = true;
+        $result->lock();
         return $result;
+    }
+    
+    private function checkNotExecuted()
+    {
+        Preconditions::checkState($this->executed === false, 'cannot execute a query more than once');
     }
     
     private function &executeCommon()
@@ -326,20 +331,17 @@ class Query
     /**
      * Group the lines into a multidimensional array using the $groupBy Grouper
      * @param array $lines
-     * @return array multidimensional array of grouped Line objects
+     * @return ResultSetGrouped an unlocked ResultSetGrouped containing the passed lines
      */
     private function groupLines(array $lines)
     {
         Preconditions::checkState($this->groupBy !== null);
-        $result = array();
+        $result = new ResultSetGrouped($this->file);
         foreach ($lines as /* @var $line Line */ $line) {
-            $key = $this->groupBy->getGroupKey($line);
-            if (!array_key_exists($key, $result)) {
-                $result[$key] = array('lines' => array());
-            }
-            $result[$key]['lines'][] = $line;
+            $groupKey = $this->groupBy->getGroupKey($line);
+            $result->addLine($groupKey, $line);
         }
-        return array_values($result);
+        return $result;
     }
     
     /**
