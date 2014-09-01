@@ -2,10 +2,10 @@
 
 namespace Peppercorn\St1;
 
-class SortTieBreakerByNextFastestTimeRaw extends SortTieBreaker
+class SortTieBreakerByNextFastestTimeRaw extends TimeSortTieBreaker
 {
 
-    protected static function getRuns(Line $line)
+    protected function getRuns(Line $line)
     {
         $query = new Query($line->getFile());
         return $query->where(new WhereDriverIs($line->getDriverCategory(), $line->getDriverClass(), $line->getDriverNumber()))
@@ -13,7 +13,7 @@ class SortTieBreakerByNextFastestTimeRaw extends SortTieBreaker
                 ->executeSimple();
     }
 
-    protected static function getTimeForTieBreak(Line $line)
+    protected function getTimeForTieBreak(Line $line)
     {
         return $line->getTimeRawForSort();
     }
