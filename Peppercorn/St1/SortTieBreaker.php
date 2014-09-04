@@ -38,6 +38,4 @@ abstract class SortTieBreaker
      */
     abstract public function breakTie(Line $a, Line $b);
     
-    abstract protected function getReasonCodeForTieBreakByTimeDifference(Line $winner, Line $loser);
-    
 }
