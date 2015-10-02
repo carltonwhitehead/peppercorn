@@ -27,6 +27,13 @@ class File
      * @var number
      */
     private $secondsPerCone;
+    
+    /**
+     * The Reader to use for reading the file
+     * 
+     * @var \Peppercorn\DataType\UnderscoreDelimitedKeyValuePair\Reader
+     */
+    private $reader;
 
     public function __construct($content, $categories, $secondsPerCone = 2)
     {
@@ -118,5 +125,13 @@ class File
     public function getSecondsPerCone()
     {
         return $this->secondsPerCone;
+    }
+    
+    public function getReader()
+    {
+        if ($this->reader === null) {
+            $this->reader = new \Peppercorn\DataType\UnderscoreDelimitedKeyValuePair\PlainReader();
+        }
+        return $this->reader;
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Peppercorn\St1;
 
+use Peppercorn\DataType\UnderscoreDelimitedKeyValuePair;
+
 /**
  * A line from an st1 file
  *
@@ -20,14 +22,21 @@ class Line
      * @var File
      */
     private $file;
-
+    
     /**
-     * the string representing this line
-     *
+     * the reader acquired from the parent st1 file
+     * 
+     * @var UnderscoreDelimitedKeyValuePair\Reader
+     */
+    private $reader;
+    
+    /**
+     * the raw content of the line
+     * 
      * @var string
      */
-    private $line;
-    
+    private $content;
+
     // Generated, cached values for corresponding getters
     private $runNumber;
     private $driverCategory;
@@ -52,11 +61,18 @@ class Line
     private $timestamp;
     private $isValid;
 
-    public function __construct(File $file, $line)
+    /**
+     * @param File $file the File containing the line
+     * @param string $content the raw content of the line
+     * 
+     */
+    public function __construct(File $file, $content)
     {
-        assert('$file !== null');
+        assert('is_string($content)');
+        
         $this->file = $file;
-        $this->line = $line;
+        $this->reader = $file->getReader();
+        $this->content = $content;
     }
     
     /**
@@ -74,23 +90,9 @@ class Line
      * @param string $key
      * @return string
      */
-    private function parse($key)
+    private function read($key)
     {
-        $keyStartPos = strpos($this->line, $key);
-        if ($keyStartPos !== false) {
-            $keyLength = strlen($key);
-            $valueStartPos = $keyStartPos + $keyLength + 1; // +1 to account for the trailing _
-            $valueStopPos = strpos($this->line, '_', $valueStartPos);
-            if ($valueStopPos !== false) {
-                $valueLength = $valueStopPos - $valueStartPos;
-                $value = substr($this->line, $valueStartPos, $valueLength);
-            } else {
-                $value = substr($this->line, $valueStartPos);
-            }
-        } else {
-            $value = '';
-        }
-        return $value;
+        return $this->reader->get($this->content, $key);
     }
 
     /**
@@ -103,7 +105,7 @@ class Line
     public function getRunNumber()
     {
         if ($this->runNumber === null) {
-            $this->runNumber = $this->parse('run');
+            $this->runNumber = $this->read('run');
         }
         return $this->runNumber;
     }
@@ -124,7 +126,7 @@ class Line
     public function getDriverCategory()
     {
         if ($this->driverCategory === null) {
-            $classString = strtoupper($this->parse('class'));
+            $classString = strtoupper($this->read('class'));
             /* @var $category Category */
             $category = null;
             foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
@@ -176,7 +178,7 @@ class Line
     public function getDriverClassRaw()
     {
         if ($this->driverClassRaw === null) {
-            $classString = strtoupper($this->parse('class'));
+            $classString = strtoupper($this->read('class'));
             if (!strlen($classString)) {
                 static $error = 'Invalid state file line is missing class.';
                 throw new LineException($error);
@@ -196,7 +198,7 @@ class Line
     public function getDriverNumber()
     {
         if ($this->driverNumber === null) {
-            $number = $this->parse('number');
+            $number = $this->read('number');
             if (!strlen($number)) {
                 static $error = 'Invalid state file line is missing driver number.';
                 throw new LineException($error);
@@ -216,7 +218,7 @@ class Line
     public function getTimeRaw()
     {
         if ($this->timeRaw === null) {
-            $this->timeRaw = $this->parse('tm');
+            $this->timeRaw = $this->read('tm');
         }
         return $this->timeRaw;
     }
@@ -343,7 +345,7 @@ class Line
     public function getPenalty()
     {
         if ($this->penalty === null) {
-            $this->penalty = strtoupper($this->parse('penalty'));
+            $this->penalty = strtoupper($this->read('penalty'));
         }
         return $this->penalty;
     }
@@ -357,7 +359,7 @@ class Line
     public function getDriverName()
     {
         if ($this->driverName === null) {
-            $driverName = $this->parse('driver');
+            $driverName = $this->read('driver');
             if (!strlen($driverName)) {
                 static $error = 'Invalid state file line is missing driver name.';
                 throw new LineException($error);
@@ -375,7 +377,7 @@ class Line
     public function getCar()
     {
         if ($this->car === null) {
-            $this->car = $this->parse('car');
+            $this->car = $this->read('car');
         }
         return $this->car;
     }
@@ -388,7 +390,7 @@ class Line
     public function getCarColor()
     {
         if ($this->carColor === null) {
-            $this->carColor = $this->parse('cc');
+            $this->carColor = $this->read('cc');
         }
         return $this->carColor;
     }
@@ -403,7 +405,7 @@ class Line
     public function getTimePax()
     {
         if ($this->timePax === null) {
-            $timePax = strtoupper($this->parse('paxed'));
+            $timePax = strtoupper($this->read('paxed'));
             if (!strlen($timePax)) {
                 throw new LineException('Line is invalid without pax time');
             }
@@ -441,7 +443,7 @@ class Line
     public function getTimestamp()
     {
         if ($this->timestamp === null) {
-            $this->timestamp = (int) $this->parse('tod');
+            $this->timestamp = (int) $this->read('tod');
         }
         return $this->timestamp;
     }
@@ -455,7 +457,7 @@ class Line
      */
     public function getDiff()
     {
-        return $this->parse('diff');
+        return $this->read('diff');
     }
 
     /**
@@ -467,7 +469,7 @@ class Line
      */
     public function getDiffFromFirst()
     {
-        return $this->parse('diff1');
+        return $this->read('diff1');
     }
     
     public static function getPenaltyDnf()
