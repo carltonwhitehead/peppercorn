@@ -17,8 +17,7 @@
         }
     ],
     "require": {
-        "php":">=5.4.0",
-        "carltonwhitehead/phava":"dev-master"
+        "php":">=5.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
@@ -29,9 +28,5 @@
         }
     },
     "repositories":[
-        {
-	        "type":"vcs",
-	        "url":"git@github.com:carltonwhitehead/phava.git"
-        }
     ]
 }

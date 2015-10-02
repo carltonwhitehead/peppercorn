@@ -1,8 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Preconditions;
-
 class WhereClassIs implements Where
 {
     private $category;
@@ -10,7 +8,7 @@ class WhereClassIs implements Where
 
     public function __construct(Category $category, $class)
     {
-        Preconditions::checkArgumentIsString($class);
+        assert('is_string($class)');
         $this->category = $category;
         $this->class = $class;
     }

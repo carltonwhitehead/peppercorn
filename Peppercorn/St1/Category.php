@@ -1,7 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Preconditions;
 class Category
 {
 
@@ -16,7 +15,7 @@ class Category
      */
     public function __construct($prefix)
     {
-        Preconditions::checkArgumentIsString($prefix);
+        assert('is_string($prefix)');
         $this->prefix = $prefix;
     }
 

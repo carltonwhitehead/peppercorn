@@ -15,11 +15,11 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $var
      *
+     * @expectedException PHPUnit_Framework_Error_Warning
      * @dataProvider providerGarbagePrefixes
      */
-    public function testInstantiageAndGetPrefixWithGarbage($var)
+    public function testInstantiateAndGetPrefixWithGarbage($var)
     {
-        $this->setExpectedException(get_class(new \Phava\Exception\IllegalArgumentException()));
         $category = new Category($var);
     }
 

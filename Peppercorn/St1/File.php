@@ -1,10 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base;
-use Phava\Base\Preconditions;
-use Phava\Base\Strings;
-
 class File
 {
 
@@ -34,10 +30,10 @@ class File
 
     public function __construct($content, $categories, $secondsPerCone = 2)
     {
-        Preconditions::checkArgumentIsString($content);
-        Preconditions::checkArgument(is_array($categories));
-        Preconditions::checkArgument(count($categories) > 0);
-        Preconditions::checkArgumentIsInteger($secondsPerCone);
+        assert('is_string($content)');
+        assert('is_array($categories)');
+        assert('count($categories) > 0');
+        assert('is_integer($secondsPerCone)');
 
         $this->buildAndSetLines($content);
 
@@ -58,7 +54,7 @@ class File
         $stringLines = array();
         foreach ($rawLines as $rawLine) {
             $stringLine = trim($rawLine);
-            if (Strings::isNotEmpty($stringLine)) {
+            if (strlen($stringLine) > 0) {
                 $stringLines[] = $stringLine;
             }
         }
@@ -105,8 +101,8 @@ class File
      */
     public function getLine($index)
     {
-        Preconditions::checkArgumentIsInteger($index);
-        Preconditions::checkArgumentIsKeyInArray($index, $this->lines);
+        assert('is_integer($index)');
+        assert('array_key_exists($index, $this->lines)');
 
         return $this->lines[$index];
     }

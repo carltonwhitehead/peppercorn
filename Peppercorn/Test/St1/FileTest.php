@@ -3,7 +3,6 @@ namespace Peppercorn\Test\St1;
 
 use Peppercorn\St1\File;
 use Peppercorn\St1\Category;
-use Phava\Exception\IllegalArgumentException;
 
 class FileTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,10 +35,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
      * @param mixed $content
      *
      * @dataProvider providerInvalidContent
+     * 
+     * @expectedException \PHPUnit_Framework_Error_Warning
      */
     public function testInstantiateFileWithInvalidContent($content)
     {
-        $this->setExpectedException(get_class(new IllegalArgumentException()));
         new File($content, array(new Category('')));
     }
 
@@ -58,10 +58,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
      * @param mixed $var
      *
      * @dataProvider providerInvalidCategories
+     * @expectedException \PHPUnit_Framework_Error_Warning
      */
     public function testInstantiateFileWithInvalidCategories($var)
     {
-        $this->setExpectedException(get_class(new IllegalArgumentException()));
         new File('', $var);
     }
 
@@ -109,10 +109,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
      * @param mixed $var
      *
      * @dataProvider providerGetLineWithInvalidArgument
+     * @expectedException \PHPUnit_Framework_Error_Warning
      */
     public function testGetLineWithInvalidArgument($var)
     {
-        $this->setExpectedException(get_class(new IllegalArgumentException()));
         $file = new File('', array(new Category('')));
         $file->getLine($var);
     }

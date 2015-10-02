@@ -1,8 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Preconditions;
-
 /**
  * @todo Refactor $lines and $results to private properties instead of passing references to methods
  */
@@ -160,7 +158,7 @@ class Query
      */
     public function executeSimple()
     {
-        Preconditions::checkState($this->groupBy === null, 'executeSimple() cannot be used with groupBy()');
+        assert('$this->groupBy === null', 'executeSimple() cannot be used with groupBy()');
         $lines = $this->executeCommon();
         return new ResultSetSimple($this->file, $lines);
     }
@@ -171,7 +169,7 @@ class Query
      */
     public function executeGrouped()
     {
-        Preconditions::checkState($this->groupBy !== null, 'must call groupBy(Grouper) before calling executeGrouped()');
+        assert('$this->groupBy !== null', 'must call groupBy(Grouper) before calling executeGrouped()');
         
         $lines = $this->executeCommon();
         
@@ -183,14 +181,9 @@ class Query
         return $result;
     }
     
-    private function checkNotExecuted()
-    {
-        Preconditions::checkState($this->executed === false, 'cannot execute a query more than once');
-    }
-    
     private function &executeCommon()
     {
-        Preconditions::checkState(!$this->executed, 'A Query can only be executed once');
+        assert('!$this->executed', 'A Query can only be executed once');
         $this->executed = true;
         $lines = $this->testLines();
         $this->sort($lines);
@@ -335,7 +328,7 @@ class Query
      */
     private function groupLines(array $lines)
     {
-        Preconditions::checkState($this->groupBy !== null);
+        assert('$this->groupBy !== null');
         $result = new ResultSetGrouped($this->file);
         foreach ($lines as /* @var $line Line */ $line) {
             $groupKey = $this->groupBy->getGroupKey($line);

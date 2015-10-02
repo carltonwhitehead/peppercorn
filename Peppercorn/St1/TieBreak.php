@@ -1,7 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Preconditions;
 class TieBreak
 {
     /**
@@ -56,8 +55,8 @@ class TieBreak
      */
     private function __construct($sortOutcome, Line $winner, Line $loser, $reasonCode)
     {
-        Preconditions::checkArgumentIsInteger($sortOutcome);
-        Preconditions::checkArgumentIsInteger($reasonCode);
+        assert('is_integer($sortOutcome)');
+        assert('is_integer($reasonCode)');
         $this->sortOutcome = $sortOutcome;
         $this->winner = $winner;
         $this->loser = $loser;

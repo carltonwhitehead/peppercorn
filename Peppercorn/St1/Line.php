@@ -1,8 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Strings;
-use Phava\Base\Preconditions;
 /**
  * A line from an st1 file
  *
@@ -56,7 +54,7 @@ class Line
 
     public function __construct(File $file, $line)
     {
-        Preconditions::checkArgument($file != null);
+        assert('$file !== null');
         $this->file = $file;
         $this->line = $line;
     }
@@ -116,7 +114,7 @@ class Line
      */
     public function hasRunNumber()
     {
-        return Strings::isNotEmpty($this->getRunNumber());
+        return strlen($this->getRunNumber()) > 0;
     }
 
     /**
@@ -130,7 +128,7 @@ class Line
             /* @var $category Category */
             $category = null;
             foreach ($this->getCategoryPrefixes() as $categoryPrefix) {
-                if (Strings::isNotEmpty($categoryPrefix) and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
+                if (strlen($categoryPrefix) > 0 and substr($classString, 0, strlen($categoryPrefix)) == $categoryPrefix) {
                     $category = $this->getCategoryByPrefix($categoryPrefix);
                     break;
                 }
@@ -156,10 +154,10 @@ class Line
         if ($this->driverClass === null) {
             $classString = $this->getDriverClassRaw();
             $categoryPrefix = $this->getDriverCategory()->getPrefix();
-            if (Strings::isNotEmpty($categoryPrefix)) {
+            if (strlen($categoryPrefix) > 0) {
                 $classString = substr($classString, strlen($categoryPrefix));
             }
-            if (Strings::isEmpty($classString)) {
+            if (!strlen($classString)) {
                 static $error = 'Invalid state file line is missing class.';
                 throw new LineException($error);
             }
@@ -179,7 +177,7 @@ class Line
     {
         if ($this->driverClassRaw === null) {
             $classString = strtoupper($this->parse('class'));
-            if (Strings::isEmpty($classString)) {
+            if (!strlen($classString)) {
                 static $error = 'Invalid state file line is missing class.';
                 throw new LineException($error);
             }
@@ -199,7 +197,7 @@ class Line
     {
         if ($this->driverNumber === null) {
             $number = $this->parse('number');
-            if (Strings::isEmpty($number)) {
+            if (!strlen($number)) {
                 static $error = 'Invalid state file line is missing driver number.';
                 throw new LineException($error);
             }
@@ -252,8 +250,8 @@ class Line
         if ($this->timeRawForSort === null) {
             if ($this->hasRunNumber()
                 and ($this->isClean() or $this->hasConePenalty())
-                and Strings::isNotEmpty($this->getTimeRaw())
-                and Strings::isNotEmpty($this->getTimePax())
+                and strlen($this->getTimeRaw() > 0)
+                and strlen($this->getTimePax() > 0)
                 and is_numeric($this->getTimeRaw())) {
                 $timeRawForSort = $this->getTimeRawWithPenalty();
             } else if ($this->isDnf()) {
@@ -360,7 +358,7 @@ class Line
     {
         if ($this->driverName === null) {
             $driverName = $this->parse('driver');
-            if (Strings::isEmpty($driverName)) {
+            if (!strlen($driverName)) {
                 static $error = 'Invalid state file line is missing driver name.';
                 throw new LineException($error);
             }
@@ -406,7 +404,7 @@ class Line
     {
         if ($this->timePax === null) {
             $timePax = strtoupper($this->parse('paxed'));
-            if (Strings::isEmpty($timePax)) {
+            if (!strlen($timePax)) {
                 throw new LineException('Line is invalid without pax time');
             }
             $this->timePax = $timePax;

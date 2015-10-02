@@ -1,7 +1,6 @@
 <?php
 namespace Peppercorn\St1;
 
-use Phava\Base\Preconditions;
 class Result
 {
     /**
