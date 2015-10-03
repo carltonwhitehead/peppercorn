@@ -3,12 +3,11 @@
 	<filter>
 		<blacklist>
 			<directory>./vendor/</directory>
-			<directory>./Peppercorn/Test/</directory>
 		</blacklist>
 	</filter>
 	<testsuites>
 		<testsuite name="Peppercorn Test Suite">
-			<directory>./Peppercorn/Test/</directory>
+			<directory>./test/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

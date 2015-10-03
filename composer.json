@@ -22,10 +22,11 @@
     "require-dev": {
         "phpunit/phpunit": "4.8.10"
     },
-    "autoload":{
-        "psr-0":{
-            "Peppercorn":"."
-        }
+    "autoload": {
+        "psr-4": { "Peppercorn\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Peppercorn\\Test\\": "test/" }
     },
     "repositories":[
     ]
