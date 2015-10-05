@@ -1,5 +1,5 @@
 <?php
-namespace Peppercorn\Test\St1;
+namespace Peppercorn\IntegrationTest\St1;
 
 use Peppercorn\St1\File;
 use Peppercorn\St1\Line;

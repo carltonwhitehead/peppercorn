@@ -6,8 +6,12 @@
 		</blacklist>
 	</filter>
 	<testsuites>
-		<testsuite name="Peppercorn Test Suite">
-			<directory>./test/</directory>
+		<testsuite name="Unit Tests">
+			<directory>./src/test/unit/</directory>
 		</testsuite>
+        <testsuite name="Integration Tests">
+            <directory>./src/test/integration/</directory>
+        </testsuite>
 	</testsuites>
+    
 </phpunit>

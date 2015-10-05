@@ -23,10 +23,14 @@
         "phpunit/phpunit": "4.8.10"
     },
     "autoload": {
-        "psr-4": { "Peppercorn\\": "src/" }
+        "psr-4": { "Peppercorn\\": "src/main/" }
     },
     "autoload-dev": {
-        "psr-4": { "Peppercorn\\Test\\": "test/" }
+        "psr-4": { 
+            "Peppercorn\\Test\\": "src/test/lib/",
+            "Peppercorn\\IntegrationTest\\": "src/test/integration/",
+            "Peppercorn\\UnitTest\\": "src/test/unit/"
+        }
     },
     "repositories":[
     ]
