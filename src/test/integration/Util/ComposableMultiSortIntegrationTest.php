@@ -30,7 +30,7 @@ class ComposableMultiSortIntegrationTest extends \PHPUnit_Framework_TestCase
                     return strnatcasecmp($a['name'], $b['name']);
                 });
 
-        usort($data, $this->composableMultiSort);
+        usort($data, $this->composableMultiSort->asSortCallable());
 
         $this->assertEquals('fruit', $data[0]['type']);
         $this->assertEquals('banana', $data[0]['name']);
